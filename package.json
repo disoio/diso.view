@@ -1,0 +1,36 @@
+{
+  "name": "diso.view",
+  "version": "0.0.1",
+  "description": "Views...",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephenhandley/diso.view.git"
+  },
+  "scripts": {
+    "test": "coffee test/test.coffee"
+  },
+  "keywords": [
+    "view",
+    "diso"
+  ],
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=0.10.5"
+  },
+  "dependencies": {
+    "type-of-is": "3.1.x"
+  },
+  "devDependencies": {
+    "asserts": "4.0.x"
+  },
+  "author": {
+    "name": "Stephen Handley",
+    "email": "stephen.handley@gmail.com",
+    "url": "http://person.sh"
+  }
+}
