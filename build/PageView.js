@@ -12,22 +12,50 @@
 
     __extends(PageView, _super);
 
-    function PageView(data) {
-      this.body = data.body;
-      this.route = data.route;
-    }
-
-    PageView.prototype.keywords = [];
+    PageView.PAGE_DOM_ID = 'page';
 
     PageView.prototype.site_name = "YR PAGE SHOULD HAVE A 'site_name'";
+
+    PageView.prototype.keywords = [];
 
     PageView.prototype.scripts = [];
 
     PageView.prototype.styles = [];
 
+    function PageView(data) {
+      this.data = data;
+      PageView.__super__.constructor.apply(this, arguments);
+      this.route = this.data.route;
+      this.body = null;
+      if ('body' in this.data) {
+        this.body = this.data.body;
+        if (!this.body_dom_id) {
+          throw "Page view with body must define body_dom_id";
+        }
+        this.contains({
+          view: this.body,
+          dom_id: this.body_dom_id
+        });
+      }
+    }
+
+    PageView.create = function(options) {
+      var Body, body, page;
+      Body = options.Body;
+      body = new Body();
+      page = new this({
+        body: body
+      });
+      page.contained({
+        dom_id: this.PAGE_DOM_ID
+      });
+      page.sync();
+      return page;
+    };
+
     PageView.prototype.meta = function(data) {
-      var attr, content, html, m, name, opts;
-      data = {
+      var attr, content, html, m, metadata, name, opts;
+      metadata = {
         name: {
           description: data.description,
           keywords: "" + (this.keywords.concat(data.keywords).join(', ')),
@@ -49,8 +77,8 @@
         }
       };
       html = '';
-      for (attr in data) {
-        m = data[attr];
+      for (attr in metadata) {
+        m = metadata[attr];
         for (name in m) {
           content = m[name];
           opts = {
@@ -64,7 +92,7 @@
     };
 
     PageView.prototype.template = function() {
-      return "YR PAGE SHOULD HAVE A TEMPLATE";
+      return "YR PAGE NEEDS A TEMPLATE";
     };
 
     PageView.prototype.container = function() {
@@ -91,11 +119,13 @@
           }));
         }
         return _results;
-      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "\n  </head>\n  \n  <body>\n    " + (this.template()) + "\n  </body>\n</html>";
+      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "\n  </head>\n  \n  <body id=\"" + this.constructor.PAGE_DOM_ID + "\" data-page-type=\"" + this.constructor.name + "\" data-body-type=\"" + this.body.constructor.name + "\" " + this.constructor.VIEW_ID_ATTR + "=\"" + this.id + "\">\n    " + (this.template()) + "\n  </body>\n</html>";
     };
 
     PageView.prototype.html = function() {
-      return this.container();
+      var html;
+      html = this.container();
+      return this.populateSubviews(html);
     };
 
     return PageView;

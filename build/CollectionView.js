@@ -15,7 +15,7 @@
       this.data = data;
       this.collection = this.data.collection;
       ItemView = this.item;
-      this.views = (function() {
+      this.subviews = (function() {
         var _i, _len, _ref, _results;
         _ref = this.collection;
         _results = [];
@@ -33,7 +33,7 @@
       var html, view;
       html = ((function() {
         var _i, _len, _ref, _results;
-        _ref = this.views;
+        _ref = this.subviews;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];

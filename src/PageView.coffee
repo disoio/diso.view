@@ -2,17 +2,40 @@ View = require('./View')
 Tag  = require('./Tag')
 
 class PageView extends View
-  constructor : (data)->
-    @body  = data.body
-    @route = data.route
-
-  keywords  : []
+  @PAGE_DOM_ID : 'page'
+  
   site_name : "YR PAGE SHOULD HAVE A 'site_name'"
+  keywords  : []
   scripts   : []
   styles    : []
   
+  constructor : (@data)->
+    super
+    
+    @route = @data.route
+    
+    @body = null
+    if 'body' of @data
+      @body = @data.body
+      unless @body_dom_id
+        throw "Page view with body must define body_dom_id"
+      
+      @contains(
+        view   : @body
+        dom_id : @body_dom_id
+      )
+  
+  @create : (options)->
+    Body = options.Body
+    body = new Body()
+    
+    page = new @(body : body)
+    page.contained(dom_id : @PAGE_DOM_ID)
+    page.sync()
+    page
+    
   meta : (data)->     
-    data = {
+    metadata = {
       name : {
         description : data.description
         keywords    : "#{@keywords.concat(data.keywords).join(', ')}"
@@ -35,7 +58,7 @@ class PageView extends View
     }
       
     html = ''
-    for attr, m of data
+    for attr, m of metadata
       for name, content of m
         opts = { 
           content : content
@@ -46,7 +69,7 @@ class PageView extends View
     html
     
   template : ()->
-    "YR PAGE SHOULD HAVE A TEMPLATE"
+    "YR PAGE NEEDS A TEMPLATE"
     
   container : ()->
     """
@@ -65,13 +88,14 @@ class PageView extends View
           #{@head()}
         </head>
         
-        <body>
+        <body id="#{@constructor.PAGE_DOM_ID}" data-page-type="#{@constructor.name}" data-body-type="#{@body.constructor.name}" #{@constructor.VIEW_ID_ATTR}="#{@id}">
           #{@template()}
         </body>
       </html>
     """
     
   html : ()->
-    @container()
+    html = @container()
+    @populateSubviews(html)
     
 module.exports = PageView

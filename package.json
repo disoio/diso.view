@@ -1,9 +1,9 @@
 {
   "name": "diso.view",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Views...",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/stephenhandley/diso.view.git"
@@ -16,14 +16,16 @@
     "diso"
   ],
   "directories": {
-    "lib": "lib",
+    "build": "build",
     "test": "test"
   },
   "engines": {
     "node": ">=0.10.5"
   },
   "dependencies": {
-    "type-of-is": "3.1.x"
+    "type-of-is": "3.1.x",
+    "jquery": "~2.1.0",
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {
     "asserts": "4.0.x"
