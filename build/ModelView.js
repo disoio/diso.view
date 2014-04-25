@@ -10,8 +10,9 @@
 
     __extends(ModelView, _super);
 
-    function ModelView(model) {
-      this.model = model;
+    function ModelView() {
+      ModelView.__super__.constructor.apply(this, arguments);
+      this.model = this.data.model;
     }
 
     return ModelView;

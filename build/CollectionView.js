@@ -11,40 +11,40 @@
     __extends(CollectionView, _super);
 
     function CollectionView(data) {
-      var ItemView, model;
+      var ItemView, model, view, _i, _len, _ref;
       this.data = data;
+      CollectionView.__super__.constructor.call(this, this.data);
+      if (!this.item) {
+        throw "CollectionView  must define item View";
+      }
+      if (!('collection' in this.data)) {
+        throw "CollectionView must pass collection param to constructor";
+      }
       this.collection = this.data.collection;
       ItemView = this.item;
-      this.subviews = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.collection;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          model = _ref[_i];
-          _results.push(new ItemView(model));
-        }
-        return _results;
-      }).call(this);
+      _ref = this.collection;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        model = _ref[_i];
+        view = new ItemView({
+          model: model
+        });
+        this.contains(view);
+      }
     }
 
-    CollectionView.prototype.container = null;
+    CollectionView.prototype.wrapper = function(html) {
+      return html;
+    };
 
     CollectionView.prototype.template = function() {
-      var html, view;
-      html = ((function() {
-        var _i, _len, _ref, _results;
-        _ref = this.subviews;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          view = _ref[_i];
-          _results.push(view.html());
-        }
-        return _results;
-      }).call(this)).join("\n");
-      if (this.container) {
-        html = this.container(html);
+      var html, id, subview, _ref;
+      html = '';
+      _ref = this.subviews;
+      for (id in _ref) {
+        subview = _ref[id];
+        html += subview.html();
       }
-      return html;
+      return this.wrapper(html);
     };
 
     return CollectionView;

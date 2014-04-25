@@ -1,52 +1,75 @@
 $ = require('jquery')
 Uuid = require('node-uuid')
+Type = require('type-of-is')
 
-regexForDomId = (dom_id)->
-  regex_str = "(<[\\w\\s]*?id=\"#{dom_id}\"[^>]*)>"
-  regex = new RegExp(regex_str, 'm')
+VIEW_REGEX = (()->
+  regex_str = "^(\\s*<[\\w][\\w0-9]*)"
+  new RegExp(regex_str, 'm')
+)()
 
 class View
-  @BEHAVIOR_ATTR = 'data-behavior'
-  @VIEW_ID_ATTR = 'data-view-id'
+  @BEHAVIOR_ATTR  = 'data-behavior'
+  @ID_ATTR_NAME   = 'id'
   
+  constructor : (@data)->
+    @data ?= {}
+    @id = Uuid.v4()
+    @subviews = {}
+  
+  idMap : ()->
+    map = {}
+    for id, subview of @subviews
+      map[id] = subview.idMap()
+    map
+        
   behavior : (value)->
     attr = "#{@constructor.BEHAVIOR_ATTR}-#{@id}"
     if value
       "#{attr}=\"#{value}\""
     else
       attr
-  
-  constructor : (@data)->
-    @data ?= {}
-    @id = Uuid.v4()
-    @subviews = {}
-    @container_dom_id = null
-  
+      
+  ns : (event_name)->
+    "#{event_name}.#{@id}"
+    
+  idAttr : ()->
+    "#{@constructor.ID_ATTR_NAME}=\"#{@id}\""
+
   run : ()->
     # override in child class
   
-  contains : (options)->
-    @subviews[options.view.id] = options
-  
-  contained : (options)->
-    # this gets called in the process of syncing 
-    # tell this view who its container is and overwrite its view id from the dom
-    @container_dom_id = options.dom_id
-    @$container = $("##{@container_dom_id}")
-    @id = @$container.attr(@constructor.VIEW_ID_ATTR)
-    
-  sync : ()->
-    @addBehaviors()
+  contains : (views)->
+    unless Type(views, Array)
+      views = [views]
       
-    for id, subview of @subviews
-      view = subview.view
-      view.contained(dom_id : subview.dom_id)
-      view.sync()
+    for view in views
+      @subviews[view.id] = view
+
+  setId : (id)->
+    @id = id
+    @$container = $("##{@id}")
+  
+  sync : (id_map)->    
+    @addBehaviors()
+    
+    ids = Object.keys(id_map)
+    temp_ids = Object.keys(@subviews)
+    
+    if (ids.length != temp_ids.length)
+      throw "Mismatch between subview id lengths"
+    
+    for i in [0..(ids.length - 1)]
+      id = ids[i]
+      map = id_map[id]
+      
+      temp_id = temp_ids[i]
+      view = @subviews[temp_id]
+      
+      if view
+        view.setId(id)
+        view.sync(map)
     
     @run()
-    
-  ns : (event_name)->
-    "#{event_name}.#{@id}"
   
   addBehaviors : ()->
     attr = @behavior()
@@ -70,19 +93,10 @@ class View
   
   html : ()->
     html = @template()
-    @populateSubviews(html)
+    @addViewId(html)
     
-  populateSubviews : (html)->
-    # subview replacement with regex based on id so that substition can be made 
-    # server side without dependency on a dom.
-    # TODO: evaluate more robust approaches like using Virtual Dom from React as a component
-    for id, subview of @subviews
-      view = subview.view
-      view_html = view.html()
-      regex = regexForDomId(subview.dom_id)
-      html = html.replace(regex, "$1 #{@constructor.VIEW_ID_ATTR}=\"#{id}\">#{view_html}")
-    
-    html
+  addViewId : (html)->
+    html.replace(VIEW_REGEX, "$1 #{@idAttr()}")
   
   json : ()->
     JSON.stringify(@data)

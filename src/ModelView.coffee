@@ -1,6 +1,8 @@
 View = require('./View')
 
 class ModelView extends View
-  constructor : (@model)->
-
+  constructor : ()->
+    super
+    @model = @data.model
+    
 module.exports = ModelView

@@ -1,6 +1,6 @@
 {
   "name": "diso.view",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Views...",
   "license": "MIT",
   "main": "build/index.js",

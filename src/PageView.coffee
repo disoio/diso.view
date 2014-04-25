@@ -17,24 +17,29 @@ class PageView extends View
     @body = null
     if 'body' of @data
       @body = @data.body
-      unless @body_dom_id
-        throw "Page view with body must define body_dom_id"
-      
-      @contains(
-        view   : @body
-        dom_id : @body_dom_id
-      )
+      @contains(@body)
+
+  idMap : ()->
+    map = {}
+    map[@id] = super()
+    map
   
   @create : (options)->
-    Body = options.Body
-    body = new Body()
+    Body   = options.Body
+    data   = options.data
+    id_map = options.id_map
     
+    body = new Body(options.data)
     page = new @(body : body)
-    page.contained(dom_id : @PAGE_DOM_ID)
-    page.sync()
+    
+    page_id = Object.keys(id_map)[0]
+    page.setId(page_id)
+    map = id_map[page_id]
+    page.sync(map)
+    
     page
     
-  meta : (data)->     
+  meta : (data)->
     metadata = {
       name : {
         description : data.description
@@ -88,7 +93,7 @@ class PageView extends View
           #{@head()}
         </head>
         
-        <body id="#{@constructor.PAGE_DOM_ID}" data-page-type="#{@constructor.name}" data-body-type="#{@body.constructor.name}" #{@constructor.VIEW_ID_ATTR}="#{@id}">
+        <body data-page-type="#{@constructor.name}" data-body-type="#{@body.constructor.name}" #{@idAttr()}>
           #{@template()}
         </body>
       </html>
@@ -96,6 +101,5 @@ class PageView extends View
     
   html : ()->
     html = @container()
-    @populateSubviews(html)
     
 module.exports = PageView

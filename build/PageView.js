@@ -29,27 +29,30 @@
       this.body = null;
       if ('body' in this.data) {
         this.body = this.data.body;
-        if (!this.body_dom_id) {
-          throw "Page view with body must define body_dom_id";
-        }
-        this.contains({
-          view: this.body,
-          dom_id: this.body_dom_id
-        });
+        this.contains(this.body);
       }
     }
 
+    PageView.prototype.idMap = function() {
+      var map;
+      map = {};
+      map[this.id] = PageView.__super__.idMap.call(this);
+      return map;
+    };
+
     PageView.create = function(options) {
-      var Body, body, page;
+      var Body, body, data, id_map, map, page, page_id;
       Body = options.Body;
-      body = new Body();
+      data = options.data;
+      id_map = options.id_map;
+      body = new Body(options.data);
       page = new this({
         body: body
       });
-      page.contained({
-        dom_id: this.PAGE_DOM_ID
-      });
-      page.sync();
+      page_id = Object.keys(id_map)[0];
+      page.setId(page_id);
+      map = id_map[page_id];
+      page.sync(map);
       return page;
     };
 
@@ -119,13 +122,12 @@
           }));
         }
         return _results;
-      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "\n  </head>\n  \n  <body id=\"" + this.constructor.PAGE_DOM_ID + "\" data-page-type=\"" + this.constructor.name + "\" data-body-type=\"" + this.body.constructor.name + "\" " + this.constructor.VIEW_ID_ATTR + "=\"" + this.id + "\">\n    " + (this.template()) + "\n  </body>\n</html>";
+      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "\n  </head>\n  \n  <body data-page-type=\"" + this.constructor.name + "\" data-body-type=\"" + this.body.constructor.name + "\" " + (this.idAttr()) + ">\n    " + (this.template()) + "\n  </body>\n</html>";
     };
 
     PageView.prototype.html = function() {
       var html;
-      html = this.container();
-      return this.populateSubviews(html);
+      return html = this.container();
     };
 
     return PageView;
