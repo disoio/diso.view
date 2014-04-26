@@ -1,5 +1,6 @@
 View = require('./View')
 Tag  = require('./Tag')
+$ = require('jquery')
 
 class PageView extends View
   @PAGE_DOM_ID : 'page'
@@ -16,9 +17,21 @@ class PageView extends View
     
     @body = null
     if 'body' of @data
-      @body = @data.body
-      @contains(@body)
-
+      @setBody(@data.body)
+  
+  setBody : (body)->
+    if @body
+      @removeSubview(@body)
+    @body = body
+    @addSubview(@body)
+  
+  swapBody : (new_body)->
+    $body = $("##{@body.id}")
+    $body.replaceWith(new_body.html())
+    @setBody(new_body)
+    @addBehaviors()
+    @run()
+      
   idMap : ()->
     map = {}
     map[@id] = super()

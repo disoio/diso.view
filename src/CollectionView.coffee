@@ -5,7 +5,7 @@ class CollectionView extends View
     super(@data)
 
     unless @item 
-      throw "CollectionView  must define item View"
+      throw "CollectionView must define item View"
     
     unless 'collection' of @data
       throw "CollectionView must pass collection param to constructor"
@@ -15,7 +15,7 @@ class CollectionView extends View
     ItemView = @item
     for model in @collection
       view = new ItemView(model : model)
-      @contains(view)
+      @addSubview(view)
   
   wrapper : (html)->
     html

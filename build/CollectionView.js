@@ -15,7 +15,7 @@
       this.data = data;
       CollectionView.__super__.constructor.call(this, this.data);
       if (!this.item) {
-        throw "CollectionView  must define item View";
+        throw "CollectionView must define item View";
       }
       if (!('collection' in this.data)) {
         throw "CollectionView must pass collection param to constructor";
@@ -28,7 +28,7 @@
         view = new ItemView({
           model: model
         });
-        this.contains(view);
+        this.addSubview(view);
       }
     }
 

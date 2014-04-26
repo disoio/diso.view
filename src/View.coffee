@@ -38,12 +38,21 @@ class View
   run : ()->
     # override in child class
   
-  contains : (views)->
-    unless Type(views, Array)
-      views = [views]
-      
-    for view in views
-      @subviews[view.id] = view
+  addSubview : (subview)->
+    unless subview.id of @subviews
+      @subviews[subview.id] = subview
+
+  addSubviews : (subviews)->
+    for view in subviews
+      @addSubview(view)
+  
+  removeSubview : (subview)->
+    if subview.id of @subviews
+      delete @subviews[view.id]
+  
+  removeSubviews : (subviews)->
+    for view in subviews
+      @removeSubview(view)
 
   setId : (id)->
     @id = id

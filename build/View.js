@@ -61,15 +61,34 @@
 
     View.prototype.run = function() {};
 
-    View.prototype.contains = function(views) {
-      var view, _i, _len, _results;
-      if (!Type(views, Array)) {
-        views = [views];
+    View.prototype.addSubview = function(subview) {
+      if (!(subview.id in this.subviews)) {
+        return this.subviews[subview.id] = subview;
       }
+    };
+
+    View.prototype.addSubviews = function(subviews) {
+      var view, _i, _len, _results;
       _results = [];
-      for (_i = 0, _len = views.length; _i < _len; _i++) {
-        view = views[_i];
-        _results.push(this.subviews[view.id] = view);
+      for (_i = 0, _len = subviews.length; _i < _len; _i++) {
+        view = subviews[_i];
+        _results.push(this.addSubview(view));
+      }
+      return _results;
+    };
+
+    View.prototype.removeSubview = function(subview) {
+      if (subview.id in this.subviews) {
+        return delete this.subviews[view.id];
+      }
+    };
+
+    View.prototype.removeSubviews = function(subviews) {
+      var view, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = subviews.length; _i < _len; _i++) {
+        view = subviews[_i];
+        _results.push(this.removeSubview(view));
       }
       return _results;
     };
