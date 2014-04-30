@@ -4,11 +4,11 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  $ = require('jquery');
+
   View = require('./View');
 
   Tag = require('./Tag');
-
-  $ = require('jquery');
 
   PageView = (function(_super) {
 
@@ -18,19 +18,25 @@
 
     PageView.prototype.site_name = "YR PAGE SHOULD HAVE A 'site_name'";
 
+    PageView.prototype.description = "YR PAGE SHOULD HAVE A 'description'";
+
     PageView.prototype.keywords = [];
 
     PageView.prototype.scripts = [];
 
     PageView.prototype.styles = [];
 
-    function PageView(data) {
-      this.data = data;
-      PageView.__super__.constructor.apply(this, arguments);
-      this.route = this.data.route;
+    function PageView(options) {
+      var Body, body;
+      PageView.__super__.constructor.call(this);
+      this.route = options.route;
+      this.url = options.url;
+      this.data = options.data || {};
       this.body = null;
-      if ('body' in this.data) {
-        this.setBody(this.data.body);
+      if ('Body' in options) {
+        Body = options.Body;
+        body = new Body(this.data);
+        this.setBody(body);
       }
     }
 
@@ -47,8 +53,9 @@
       $body = $("#" + this.body.id);
       $body.replaceWith(new_body.html());
       this.setBody(new_body);
-      this.addBehaviors();
-      return this.run();
+      new_body.setContainer();
+      new_body.addBehaviors();
+      return new_body.run();
     };
 
     PageView.prototype.idMap = function() {
@@ -59,16 +66,13 @@
     };
 
     PageView.create = function(options) {
-      var Body, body, data, id_map, map, page, page_id;
-      Body = options.Body;
-      data = options.data;
+      var id_map, map, page, page_id;
       id_map = options.id_map;
-      body = new Body(options.data);
-      page = new this({
-        body: body
-      });
+      delete options.id_map;
+      page = new this(options);
       page_id = Object.keys(id_map)[0];
       page.setId(page_id);
+      page.setContainer();
       map = id_map[page_id];
       page.sync(map);
       return page;
@@ -78,8 +82,8 @@
       var attr, content, html, m, metadata, name, opts;
       metadata = {
         name: {
-          description: data.description,
-          keywords: "" + (this.keywords.concat(data.keywords).join(', ')),
+          description: data.description || this.description,
+          keywords: this.keywords,
           viewport: this.viewport || 'width=device-width, initial-scale=1'
         },
         itemprop: {
@@ -140,7 +144,7 @@
           }));
         }
         return _results;
-      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "\n  </head>\n  \n  <body data-page-type=\"" + this.constructor.name + "\" data-body-type=\"" + this.body.constructor.name + "\" " + (this.idAttr()) + ">\n    " + (this.template()) + "\n  </body>\n</html>";
+      }).call(this)).join("\n")) + "\n    \n    " + (this.head()) + "          \n  </head>\n  \n  <body data-page-type=\"" + this.constructor.name + "\" data-body-type=\"" + this.body.constructor.name + "\" " + (this.idAttr()) + ">\n    " + (this.template()) + "\n  </body>\n</html>";
     };
 
     PageView.prototype.html = function() {

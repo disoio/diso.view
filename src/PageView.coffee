@@ -1,24 +1,30 @@
+$ = require('jquery')
+
 View = require('./View')
 Tag  = require('./Tag')
-$ = require('jquery')
 
 class PageView extends View
   @PAGE_DOM_ID : 'page'
   
-  site_name : "YR PAGE SHOULD HAVE A 'site_name'"
-  keywords  : []
-  scripts   : []
-  styles    : []
+  site_name   : "YR PAGE SHOULD HAVE A 'site_name'"
+  description : "YR PAGE SHOULD HAVE A 'description'"
+  keywords    : []
+  scripts     : []
+  styles      : []
   
-  constructor : (@data)->
-    super
+  constructor : (options)->
+    super()
     
-    @route = @data.route
+    @route = options.route
+    @url   = options.url
+    @data  = options.data || {}
     
     @body = null
-    if 'body' of @data
-      @setBody(@data.body)
-  
+    if ('Body' of options)
+      Body = options.Body
+      body = new Body(@data)
+      @setBody(body)
+      
   setBody : (body)->
     if @body
       @removeSubview(@body)
@@ -29,24 +35,24 @@ class PageView extends View
     $body = $("##{@body.id}")
     $body.replaceWith(new_body.html())
     @setBody(new_body)
-    @addBehaviors()
-    @run()
+    new_body.setContainer()
+    new_body.addBehaviors()
+    new_body.run()
       
   idMap : ()->
     map = {}
     map[@id] = super()
     map
   
-  @create : (options)->
-    Body   = options.Body
-    data   = options.data
+  @create : (options)->    
     id_map = options.id_map
+    delete options.id_map
     
-    body = new Body(options.data)
-    page = new @(body : body)
-    
+    page = new @(options)
     page_id = Object.keys(id_map)[0]
     page.setId(page_id)
+    page.setContainer()
+    
     map = id_map[page_id]
     page.sync(map)
     
@@ -55,8 +61,8 @@ class PageView extends View
   meta : (data)->
     metadata = {
       name : {
-        description : data.description
-        keywords    : "#{@keywords.concat(data.keywords).join(', ')}"
+        description : data.description || @description
+        keywords    : @keywords
         viewport    : @viewport || 'width=device-width, initial-scale=1'
       }
       itemprop : {
@@ -103,7 +109,7 @@ class PageView extends View
           
           #{(Tag.script(src: src) for src in @scripts).join("\n")}
           
-          #{@head()}
+          #{@head()}          
         </head>
         
         <body data-page-type="#{@constructor.name}" data-body-type="#{@body.constructor.name}" #{@idAttr()}>

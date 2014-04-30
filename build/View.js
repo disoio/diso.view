@@ -94,7 +94,10 @@
     };
 
     View.prototype.setId = function(id) {
-      this.id = id;
+      return this.id = id;
+    };
+
+    View.prototype.setContainer = function() {
       return this.$container = $("#" + this.id);
     };
 
@@ -113,6 +116,7 @@
         view = this.subviews[temp_id];
         if (view) {
           view.setId(id);
+          view.setContainer();
           view.sync(map);
         }
       }
@@ -121,6 +125,7 @@
 
     View.prototype.addBehaviors = function() {
       var $node, attr, behaviors, node, _i, _len, _results;
+      this.addBehavior(this.$container);
       attr = this.behavior();
       behaviors = this.$container.find("[" + attr + "]");
       _results = [];
@@ -136,6 +141,10 @@
       var attr, event_name, handler, handler_name, value, _ref;
       attr = this.behavior();
       value = $node.attr(attr);
+      if (!value) {
+        return;
+      }
+      console.log(value);
       _ref = value.split(':'), event_name = _ref[0], handler_name = _ref[1];
       if (handler_name in this) {
         event_name = this.ns(event_name);
@@ -156,10 +165,6 @@
 
     View.prototype.addViewId = function(html) {
       return html.replace(VIEW_REGEX, "$1 " + (this.idAttr()));
-    };
-
-    View.prototype.json = function() {
-      return JSON.stringify(this.data);
     };
 
     return View;

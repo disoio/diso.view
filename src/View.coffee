@@ -1,4 +1,4 @@
-$ = require('jquery')
+$    = require('jquery')
 Uuid = require('node-uuid')
 Type = require('type-of-is')
 
@@ -8,8 +8,8 @@ VIEW_REGEX = (()->
 )()
 
 class View
-  @BEHAVIOR_ATTR  = 'data-behavior'
-  @ID_ATTR_NAME   = 'id'
+  @BEHAVIOR_ATTR = 'data-behavior'
+  @ID_ATTR_NAME  = 'id'
   
   constructor : (@data)->
     @data ?= {}
@@ -56,6 +56,8 @@ class View
 
   setId : (id)->
     @id = id
+  
+  setContainer : ()->
     @$container = $("##{@id}")
   
   sync : (id_map)->    
@@ -76,11 +78,14 @@ class View
       
       if view
         view.setId(id)
+        view.setContainer()
         view.sync(map)
     
     @run()
   
   addBehaviors : ()->
+    @addBehavior(@$container)
+    
     attr = @behavior()
     behaviors = @$container.find("[#{attr}]")
     for node in behaviors
@@ -90,6 +95,9 @@ class View
   addBehavior : ($node)->
     attr = @behavior()
     value = $node.attr(attr)
+    unless value
+      return
+    console.log(value)
     [event_name, handler_name] = value.split(':')
 
     if handler_name of @
@@ -107,7 +115,5 @@ class View
   addViewId : (html)->
     html.replace(VIEW_REGEX, "$1 #{@idAttr()}")
   
-  json : ()->
-    JSON.stringify(@data)
       
 module.exports = View
