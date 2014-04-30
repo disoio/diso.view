@@ -36,7 +36,6 @@ class PageView extends View
     $body.replaceWith(new_body.html())
     @setBody(new_body)
     new_body.setContainer()
-    new_body.addBehaviors()
     new_body.run()
       
   idMap : ()->
@@ -55,6 +54,8 @@ class PageView extends View
     
     map = id_map[page_id]
     page.sync(map)
+    
+    page.run()
     
     page
     

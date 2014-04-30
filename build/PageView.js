@@ -54,7 +54,6 @@
       $body.replaceWith(new_body.html());
       this.setBody(new_body);
       new_body.setContainer();
-      new_body.addBehaviors();
       return new_body.run();
     };
 
@@ -75,6 +74,7 @@
       page.setContainer();
       map = id_map[page_id];
       page.sync(map);
+      page.run();
       return page;
     };
 

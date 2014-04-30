@@ -36,6 +36,13 @@ class View
     "#{@constructor.ID_ATTR_NAME}=\"#{@id}\""
 
   run : ()->
+    @setContainer()
+    @setup()
+    @addBehaviors()
+    for id, subview of @subviews
+      subview.run()
+    
+  setup : ()->
     # override in child class
   
   addSubview : (subview)->
@@ -60,9 +67,7 @@ class View
   setContainer : ()->
     @$container = $("##{@id}")
   
-  sync : (id_map)->    
-    @addBehaviors()
-    
+  sync : (id_map)->        
     ids = Object.keys(id_map)
     temp_ids = Object.keys(@subviews)
     
@@ -80,8 +85,6 @@ class View
         view.setId(id)
         view.setContainer()
         view.sync(map)
-    
-    @run()
   
   addBehaviors : ()->
     @addBehavior(@$container)
@@ -97,7 +100,7 @@ class View
     value = $node.attr(attr)
     unless value
       return
-    console.log(value)
+
     [event_name, handler_name] = value.split(':')
 
     if handler_name of @

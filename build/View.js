@@ -59,7 +59,21 @@
       return "" + this.constructor.ID_ATTR_NAME + "=\"" + this.id + "\"";
     };
 
-    View.prototype.run = function() {};
+    View.prototype.run = function() {
+      var id, subview, _ref, _results;
+      this.setContainer();
+      this.setup();
+      this.addBehaviors();
+      _ref = this.subviews;
+      _results = [];
+      for (id in _ref) {
+        subview = _ref[id];
+        _results.push(subview.run());
+      }
+      return _results;
+    };
+
+    View.prototype.setup = function() {};
 
     View.prototype.addSubview = function(subview) {
       if (!(subview.id in this.subviews)) {
@@ -102,13 +116,13 @@
     };
 
     View.prototype.sync = function(id_map) {
-      var i, id, ids, map, temp_id, temp_ids, view, _i, _ref;
-      this.addBehaviors();
+      var i, id, ids, map, temp_id, temp_ids, view, _i, _ref, _results;
       ids = Object.keys(id_map);
       temp_ids = Object.keys(this.subviews);
       if (ids.length !== temp_ids.length) {
         throw "Mismatch between subview id lengths";
       }
+      _results = [];
       for (i = _i = 0, _ref = ids.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
         id = ids[i];
         map = id_map[id];
@@ -117,10 +131,12 @@
         if (view) {
           view.setId(id);
           view.setContainer();
-          view.sync(map);
+          _results.push(view.sync(map));
+        } else {
+          _results.push(void 0);
         }
       }
-      return this.run();
+      return _results;
     };
 
     View.prototype.addBehaviors = function() {
@@ -144,7 +160,6 @@
       if (!value) {
         return;
       }
-      console.log(value);
       _ref = value.split(':'), event_name = _ref[0], handler_name = _ref[1];
       if (handler_name in this) {
         event_name = this.ns(event_name);
