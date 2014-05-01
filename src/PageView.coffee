@@ -96,6 +96,9 @@ class PageView extends View
   template : ()->
     "YR PAGE NEEDS A TEMPLATE"
     
+  head : ()->
+    ''
+    
   container : ()->
     """
       <!DOCTYPE html>

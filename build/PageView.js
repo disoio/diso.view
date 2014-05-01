@@ -120,6 +120,10 @@
       return "YR PAGE NEEDS A TEMPLATE";
     };
 
+    PageView.prototype.head = function() {
+      return '';
+    };
+
     PageView.prototype.container = function() {
       var href, src;
       return "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    " + (this.meta(this.body.meta())) + "\n\n    <title>" + (this.body.meta().title || this.site_name) + "</title>\n\n    " + (((function() {
