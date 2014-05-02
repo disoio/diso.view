@@ -1,5 +1,5 @@
 $    = require('jquery')
-Uuid = require('node-uuid')
+ShortId = require('shortid')
 Type = require('type-of-is')
 
 VIEW_REGEX = (()->
@@ -13,7 +13,10 @@ class View
   
   constructor : (@data)->
     @data ?= {}
-    @id = Uuid.v4()
+    
+    unless @id
+      @id = ShortId.generate()
+      
     @subviews = {}
   
   idMap : ()->
