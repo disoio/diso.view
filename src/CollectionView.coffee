@@ -1,20 +1,27 @@
 View = require('./View')
 
-class CollectionView extends View 
-  constructor : (@data)->
-    super(@data)
-
+class CollectionView extends View
+  collection_name : null
+  
+  constructor : ()->
+    super
+    
     unless @item 
       throw "CollectionView must define item View"
     
-    unless 'collection' of @data
+    collection_name = @collection_name || 'collection'
+    
+    unless collection_name of @data
       throw "CollectionView must pass collection param to constructor"
     
-    @collection = @data.collection
+    @collection = @data[collection_name]
     
     ItemView = @item
     for model in @collection
-      view = new ItemView(model : model)
+      view = new ItemView(
+        model           : model
+        collection_view : @
+      )
       @addSubview(view)
   
   wrapper : (html)->
