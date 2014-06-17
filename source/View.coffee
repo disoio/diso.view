@@ -109,7 +109,13 @@ class View
     if handler_name of @
       event_name = @ns(event_name)
       handler = @[handler_name]
-      $node.on(event_name, handler)
+      $node.on(event_name, (event)->
+        handler(
+          event : event
+          node  : this
+          $node : $node
+        )
+      )
     
   template : ()->
     '<h1>You should probably define .template on your view</h1>'
