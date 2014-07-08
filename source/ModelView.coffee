@@ -6,7 +6,10 @@ class ModelView extends View
   constructor : ()->
     super
     
-    @[@model_name] = @data.model
+    @[@model_name] = if (@model_name of @data)
+      @data[@model_name]
+    else
+      @data.model
 
   model : ()->
     @[@model_name]

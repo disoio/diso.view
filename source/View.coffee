@@ -51,6 +51,7 @@ class View
   addSubview : (subview)->
     unless subview.id of @subviews
       @subviews[subview.id] = subview
+      subview.parent = @
 
   addSubviews : (subviews)->
     for view in subviews
@@ -58,11 +59,17 @@ class View
   
   removeSubview : (subview)->
     if subview.id of @subviews
-      delete @subviews[view.id]
+      delete @subviews[subview.id]
+      subview.parent = null
+      subview.removeBehaviors()
   
   removeSubviews : (subviews)->
     for view in subviews
       @removeSubview(view)
+
+  removeAllSubviews : ()->
+    for id, subview of @subviews
+      @removeSubview(subview)
 
   setId : (id)->
     @id = id
@@ -116,6 +123,11 @@ class View
           $node : $node
         )
       )
+
+  removeBehaviors : ()->
+    if @$container
+      @$container.off()
+      @$container.find("*").off()
     
   template : ()->
     '<h1>You should probably define .template on your view</h1>'
@@ -123,6 +135,13 @@ class View
   html : ()->
     html = @template()
     @addViewId(html)
+
+  refresh : (rerun = true)->
+    @removeBehaviors()
+    html = @html()
+    @$container.replaceWith(html)
+    if rerun
+      @run()
     
   addViewId : (html)->
     html.replace(VIEW_REGEX, "$1 #{@idAttr()}")

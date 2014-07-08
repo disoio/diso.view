@@ -12,7 +12,7 @@
 
     function ModelView() {
       ModelView.__super__.constructor.apply(this, arguments);
-      this[this.model_name] = this.data.model;
+      this[this.model_name] = this.model_name in this.data ? this.data[this.model_name] : this.data.model;
     }
 
     ModelView.prototype.model = function() {

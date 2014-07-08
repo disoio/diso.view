@@ -48,10 +48,10 @@
 
     PageView.prototype.swapBody = function(new_body) {
       var $body;
+      this.body.removeBehaviors();
       $body = $("#" + this.body.id);
       $body.replaceWith(new_body.html());
       this.setBody(new_body);
-      new_body.setContainer();
       return new_body.run();
     };
 

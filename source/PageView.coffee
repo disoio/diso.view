@@ -32,10 +32,10 @@ class PageView extends View
     @addSubview(@body)
   
   swapBody : (new_body)->
+    @body.removeBehaviors()
     $body = $("##{@body.id}")
     $body.replaceWith(new_body.html())
     @setBody(new_body)
-    new_body.setContainer()
     new_body.run()
       
   idMap : ()->

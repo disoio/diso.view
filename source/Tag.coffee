@@ -37,5 +37,5 @@ for tag in tags
 
 module.exports.stylesheet = (options)->
   options.rel  = "stylesheet" 
-  options.type ="text/css" 
+  options.type = "text/css" 
   @link(options)

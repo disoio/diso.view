@@ -76,7 +76,8 @@
 
     View.prototype.addSubview = function(subview) {
       if (!(subview.id in this.subviews)) {
-        return this.subviews[subview.id] = subview;
+        this.subviews[subview.id] = subview;
+        return subview.parent = this;
       }
     };
 
@@ -92,7 +93,9 @@
 
     View.prototype.removeSubview = function(subview) {
       if (subview.id in this.subviews) {
-        return delete this.subviews[view.id];
+        delete this.subviews[subview.id];
+        subview.parent = null;
+        return subview.removeBehaviors();
       }
     };
 
@@ -102,6 +105,17 @@
       for (_i = 0, _len = subviews.length; _i < _len; _i++) {
         view = subviews[_i];
         _results.push(this.removeSubview(view));
+      }
+      return _results;
+    };
+
+    View.prototype.removeAllSubviews = function() {
+      var id, subview, _ref, _results;
+      _ref = this.subviews;
+      _results = [];
+      for (id in _ref) {
+        subview = _ref[id];
+        _results.push(this.removeSubview(subview));
       }
       return _results;
     };
@@ -173,6 +187,13 @@
       }
     };
 
+    View.prototype.removeBehaviors = function() {
+      if (this.$container) {
+        this.$container.off();
+        return this.$container.find("*").off();
+      }
+    };
+
     View.prototype.template = function() {
       return '<h1>You should probably define .template on your view</h1>';
     };
@@ -181,6 +202,19 @@
       var html;
       html = this.template();
       return this.addViewId(html);
+    };
+
+    View.prototype.refresh = function(rerun) {
+      var html;
+      if (rerun == null) {
+        rerun = true;
+      }
+      this.removeBehaviors();
+      html = this.html();
+      this.$container.replaceWith(html);
+      if (rerun) {
+        return this.run();
+      }
     };
 
     View.prototype.addViewId = function(html) {
