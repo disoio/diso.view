@@ -8,20 +8,40 @@
   ModelView = (function(_super) {
     __extends(ModelView, _super);
 
-    ModelView.prototype.model_name = 'model';
+    ModelView.prototype.model_name = null;
+
+    ModelView.prototype._modelName = function() {
+      return this.model_name || '_model';
+    };
 
     function ModelView() {
       ModelView.__super__.constructor.apply(this, arguments);
-      this[this.model_name] = this.model_name in this.data ? this.data[this.model_name] : this.data.model;
+      if ('model' in this.data) {
+        this.model = this.data.model;
+      } else if (this.model_name) {
+        if (this.model_name in this.data) {
+          this.model = this.data[this.model_name];
+        } else if (this.model_name in this) {
+          this.model = this[this.model_name];
+        }
+      }
+      if (!this.model) {
+        throw new Error("diso.view.Model: Missing model");
+      }
     }
-
-    ModelView.prototype.model = function() {
-      return this[this.model_name];
-    };
 
     return ModelView;
 
   })(View);
+
+  Object.defineProperty(ModelView.prototype, 'model', {
+    get: function() {
+      return this[this._modelName()];
+    },
+    set: function(val) {
+      return this[this._modelName()] = val;
+    }
+  });
 
   module.exports = ModelView;
 

@@ -12,34 +12,49 @@
 
     CollectionView.prototype.collection_name = null;
 
+    CollectionView.prototype._collectionName = function() {
+      return this.collection_name || '_collection';
+    };
+
     CollectionView.prototype.has_subviews = false;
 
     function CollectionView() {
-      var ItemView, collection_name, item_data, model, view, _i, _len, _ref;
       CollectionView.__super__.constructor.apply(this, arguments);
-      if (!this.item) {
-        throw "CollectionView must define item View";
-      }
-      collection_name = this.collection_name || 'collection';
-      if (collection_name in this.data) {
-        this.collection = this.data[collection_name];
+      if ('collection' in this.data) {
+        this.collection = this.data.collection;
+      } else if (this.collection_name) {
+        if (this.collection_name in this.data) {
+          this.collection = this.data[this.collection_name];
+        } else if (this.collection_name in this) {
+          this.collection = this[this.collection_name];
+        }
       }
       if (!this.collection) {
-        throw "CollectionView must define collection or pass via constructor";
+        throw new Error("diso.view.Collection: Missing collection");
       }
+      if (!this.item) {
+        throw new Error("diso.view.Collection : Missing item template or view");
+      }
+      this.setupItemViews();
+    }
+
+    CollectionView.prototype.setupItemViews = function() {
+      var ItemView, item_data, model, view, _i, _len, _ref, _results;
       if (Type.extension(this.item, View)) {
         this.has_subviews = true;
         ItemView = this.item;
         _ref = this.collection;
+        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           model = _ref[_i];
           item_data = this.itemData();
           item_data.model = model;
           view = new ItemView(item_data);
-          this.addSubview(view);
+          _results.push(this.addSubview(view));
         }
+        return _results;
       }
-    }
+    };
 
     CollectionView.prototype.wrapper = function(html) {
       return html;
@@ -70,9 +85,26 @@
       return this.wrapper(html);
     };
 
+    CollectionView.prototype.refresh = function(rerun) {
+      if (rerun == null) {
+        rerun = true;
+      }
+      this.setupItemViews();
+      return CollectionView.__super__.refresh.call(this, rerun);
+    };
+
     return CollectionView;
 
   })(View);
+
+  Object.defineProperty(CollectionView.prototype, 'collection', {
+    get: function() {
+      return this[this._collectionName()];
+    },
+    set: function(val) {
+      return this[this._collectionName()] = val;
+    }
+  });
 
   module.exports = CollectionView;
 

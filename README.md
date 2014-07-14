@@ -1,6 +1,8 @@
 diso.view
 ===========
 
+0.0.12
+
 Description
 -----------
-Views
+Views .. pre still release derp
