@@ -2,6 +2,9 @@ Type = require('type-of-is')
 
 View = require('./View')
 
+throwError = (msg)->
+  throw new Error("diso.view.Collection: #{msg}")
+
 class CollectionView extends View
   collection_name : null
   _collectionName : ()->
@@ -36,10 +39,10 @@ class CollectionView extends View
     # either set above or in the child class. otherwise throw error
 
     unless @collection
-      throw new Error("diso.view.Collection: Missing collection")
+      throwError("Missing collection")
 
     unless @item 
-      throw new Error("diso.view.Collection : Missing item template or view")
+      throwError("Missing item template or view")
     
     @setupItemViews()
 
@@ -61,6 +64,24 @@ class CollectionView extends View
     {
       collection_view : @
     }
+
+  addModel : (model)->
+    unless Type(model.isEqual, Function)
+      throwError("collection model missing isEqual method")
+    
+    index = null
+    len = @collection.length
+    if (len > 0)
+      for i in [0..(len - 1)]
+        other_model = @collection[i]
+        if model.isEqual(other_model)
+          index = i
+          break
+
+    if index
+      @collection[index] = model
+    else
+      @collection.unshift(model)
   
   template : ()->
     html = ''
@@ -75,6 +96,7 @@ class CollectionView extends View
     @wrapper(html)
 
   refresh : (rerun = true)->
+    @removeAllSubviews()
     @setupItemViews()
     super(rerun)
 

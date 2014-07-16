@@ -1,11 +1,15 @@
 (function() {
-  var CollectionView, Type, View,
+  var CollectionView, Type, View, throwError,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Type = require('type-of-is');
 
   View = require('./View');
+
+  throwError = function(msg) {
+    throw new Error("diso.view.Collection: " + msg);
+  };
 
   CollectionView = (function(_super) {
     __extends(CollectionView, _super);
@@ -30,10 +34,10 @@
         }
       }
       if (!this.collection) {
-        throw new Error("diso.view.Collection: Missing collection");
+        throwError("Missing collection");
       }
       if (!this.item) {
-        throw new Error("diso.view.Collection : Missing item template or view");
+        throwError("Missing item template or view");
       }
       this.setupItemViews();
     }
@@ -66,6 +70,29 @@
       };
     };
 
+    CollectionView.prototype.addModel = function(model) {
+      var i, index, len, other_model, _i, _ref;
+      if (!Type(model.isEqual, Function)) {
+        throwError("collection model missing isEqual method");
+      }
+      index = null;
+      len = this.collection.length;
+      if (len > 0) {
+        for (i = _i = 0, _ref = len - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+          other_model = this.collection[i];
+          if (model.isEqual(other_model)) {
+            index = i;
+            break;
+          }
+        }
+      }
+      if (index) {
+        return this.collection[index] = model;
+      } else {
+        return this.collection.unshift(model);
+      }
+    };
+
     CollectionView.prototype.template = function() {
       var html, id, model, subview, _i, _len, _ref, _ref1;
       html = '';
@@ -89,6 +116,7 @@
       if (rerun == null) {
         rerun = true;
       }
+      this.removeAllSubviews();
       this.setupItemViews();
       return CollectionView.__super__.refresh.call(this, rerun);
     };
