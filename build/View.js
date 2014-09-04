@@ -1,5 +1,5 @@
 (function() {
-  var $, ShortId, Type, VIEW_REGEX, View;
+  var $, BEHAVIOR_ATTR, ID_ATTR_NAME, ShortId, Type, VIEW_REGEX, View;
 
   $ = require('jquery');
 
@@ -13,10 +13,12 @@
     return new RegExp(regex_str, 'm');
   })();
 
-  View = (function() {
-    View.BEHAVIOR_ATTR = 'data-behavior';
+  BEHAVIOR_ATTR = 'data-behavior';
 
-    View.ID_ATTR_NAME = 'id';
+  ID_ATTR_NAME = 'id';
+
+  View = (function() {
+    View.prototype.id = null;
 
     function View(data) {
       this.data = data;
@@ -26,44 +28,37 @@
       if (!this.id) {
         this.id = ShortId.generate();
       }
-      this.subviews = {};
+      this._subviews = {};
     }
 
-    View.prototype.idMap = function() {
-      var id, map, subview, _ref;
-      map = {};
-      _ref = this.subviews;
-      for (id in _ref) {
-        subview = _ref[id];
-        map[id] = subview.idMap();
+    View.prototype.html = function() {
+      var html;
+      html = this.template();
+      return this._addViewId(html);
+    };
+
+    View.prototype.refresh = function(rerun) {
+      var html;
+      if (rerun == null) {
+        rerun = true;
       }
-      return map;
+      this._removeBehaviors();
+      html = this.html();
+      this.$node.replaceWith(html);
+      if (rerun) {
+        return this.run();
+      }
     };
 
     View.prototype.behavior = function(value) {
-      var attr;
-      attr = "" + this.constructor.BEHAVIOR_ATTR + "-" + this.id;
-      if (value) {
-        return "" + attr + "=\"" + value + "\"";
-      } else {
-        return attr;
-      }
-    };
-
-    View.prototype.ns = function(event_name) {
-      return "" + event_name + "." + this.id;
-    };
-
-    View.prototype.idAttr = function() {
-      return "" + this.constructor.ID_ATTR_NAME + "=\"" + this.id + "\"";
+      return "" + (this._behaviorAttr()) + "=\"" + value + "\"";
     };
 
     View.prototype.run = function() {
       var id, subview, _ref, _results;
-      this.setContainer();
       this.setup();
-      this.addBehaviors();
-      _ref = this.subviews;
+      this._addBehaviors();
+      _ref = this._subviews;
       _results = [];
       for (id in _ref) {
         subview = _ref[id];
@@ -72,11 +67,34 @@
       return _results;
     };
 
-    View.prototype.setup = function() {};
+    View.prototype.page = function() {
+      var view;
+      if (!this._page) {
+        view = this;
+        while (view.parent) {
+          view = view.parent;
+        }
+        this._page = view;
+      }
+      return this._page;
+    };
+
+    View.prototype.goto = function(args) {
+      return this.page().container.goto(args);
+    };
+
+    View.prototype.setNode = function(id) {
+      this.id = id;
+      return this.$node = $("#" + this.id);
+    };
+
+    View.prototype.subviews = function() {
+      return this._subviews;
+    };
 
     View.prototype.addSubview = function(subview) {
-      if (!(subview.id in this.subviews)) {
-        this.subviews[subview.id] = subview;
+      if (!(subview.id in this._subviews)) {
+        this._subviews[subview.id] = subview;
         return subview.parent = this;
       }
     };
@@ -92,8 +110,8 @@
     };
 
     View.prototype.removeSubview = function(subview) {
-      if (subview.id in this.subviews) {
-        delete this.subviews[subview.id];
+      if (subview.id in this._subviews) {
+        delete this._subviews[subview.id];
         subview.parent = null;
         return subview.removeBehaviors();
       }
@@ -111,7 +129,7 @@
 
     View.prototype.removeAllSubviews = function() {
       var id, subview, _ref, _results;
-      _ref = this.subviews;
+      _ref = this._subviews;
       _results = [];
       for (id in _ref) {
         subview = _ref[id];
@@ -120,62 +138,36 @@
       return _results;
     };
 
-    View.prototype.setId = function(id) {
-      return this.id = id;
+    View.prototype.setup = function() {};
+
+    View.prototype.template = function() {
+      return "<h1>\n  You need to add a <strong>template</strong> method to your view\n</h1>";
     };
 
-    View.prototype.setContainer = function() {
-      return this.$container = $("#" + this.id);
-    };
-
-    View.prototype.sync = function(id_map) {
-      var i, id, ids, map, temp_id, temp_ids, view, _i, _ref, _results;
-      ids = Object.keys(id_map);
-      temp_ids = Object.keys(this.subviews);
-      if (ids.length !== temp_ids.length) {
-        throw "Mismatch between subview id lengths";
-      }
-      _results = [];
-      for (i = _i = 0, _ref = ids.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-        id = ids[i];
-        map = id_map[id];
-        temp_id = temp_ids[i];
-        view = this.subviews[temp_id];
-        if (view) {
-          view.setId(id);
-          view.setContainer();
-          _results.push(view.sync(map));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
-
-    View.prototype.addBehaviors = function() {
+    View.prototype._addBehaviors = function() {
       var $node, attr, behaviors, node, _i, _len, _results;
-      this.addBehavior(this.$container);
-      attr = this.behavior();
-      behaviors = this.$container.find("[" + attr + "]");
+      this._addBehavior(this.$node);
+      attr = this._behaviorAttr();
+      behaviors = this.$node.find("[" + attr + "]");
       _results = [];
       for (_i = 0, _len = behaviors.length; _i < _len; _i++) {
         node = behaviors[_i];
         $node = $(node);
-        _results.push(this.addBehavior($node));
+        _results.push(this._addBehavior($node));
       }
       return _results;
     };
 
-    View.prototype.addBehavior = function($node) {
+    View.prototype._addBehavior = function($node) {
       var attr, event_name, handler, handler_name, value, _ref;
-      attr = this.behavior();
+      attr = this._behaviorAttr();
       value = $node.attr(attr);
       if (!value) {
         return;
       }
       _ref = value.split(':'), event_name = _ref[0], handler_name = _ref[1];
       if (handler_name in this) {
-        event_name = this.ns(event_name);
+        event_name = this._namespaceEvent(event_name);
         handler = this[handler_name];
         return $node.on(event_name, function(event) {
           return handler({
@@ -184,41 +176,32 @@
             $node: $node
           });
         });
+      } else {
+        return console.error("no event handler on view named " + handler_name);
       }
     };
 
-    View.prototype.removeBehaviors = function() {
-      if (this.$container) {
-        this.$container.off();
-        return this.$container.find("*").off();
+    View.prototype._removeBehaviors = function() {
+      if (this.$node) {
+        this.$node.off();
+        return this.$node.find("*").off();
       }
     };
 
-    View.prototype.template = function() {
-      return '<h1>You should probably define .template on your view</h1>';
+    View.prototype._addViewId = function(html) {
+      return html.replace(VIEW_REGEX, "$1 " + (this._idAttr()));
     };
 
-    View.prototype.html = function() {
-      var html;
-      html = this.template();
-      return this.addViewId(html);
+    View.prototype._behaviorAttr = function() {
+      return "" + BEHAVIOR_ATTR + "-" + this.id;
     };
 
-    View.prototype.refresh = function(rerun) {
-      var html;
-      if (rerun == null) {
-        rerun = true;
-      }
-      this.removeBehaviors();
-      html = this.html();
-      this.$container.replaceWith(html);
-      if (rerun) {
-        return this.run();
-      }
+    View.prototype._idAttr = function() {
+      return "" + ID_ATTR_NAME + "=\"" + this.id + "\"";
     };
 
-    View.prototype.addViewId = function(html) {
-      return html.replace(VIEW_REGEX, "$1 " + (this.idAttr()));
+    View.prototype._namespaceEvent = function(event_name) {
+      return "" + event_name + "." + this.id;
     };
 
     return View;

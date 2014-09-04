@@ -1,15 +1,19 @@
 (function() {
-  var View;
+  var CollectionView, ModelView, Page, View;
 
   View = require('./View');
 
-  View.Collection = require('./CollectionView');
+  CollectionView = require('./CollectionView');
 
-  View.Page = require('./PageView');
+  Page = require('./Page');
 
-  View.Model = require('./ModelView');
+  ModelView = require('./ModelView');
 
-  View.Tag = require('./Tag');
+  View.Collection = CollectionView;
+
+  View.Page = Page;
+
+  View.Model = ModelView;
 
   module.exports = View;
 

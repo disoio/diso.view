@@ -1,6 +1,6 @@
 {
   "name": "diso.view",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "Views...",
   "license": "MIT",
   "main": "build/index.js",
@@ -34,7 +34,8 @@
     "grunt"                : "~0.4.4",
     "grunt-contrib-watch"  : "~0.6.1",
     "grunt-contrib-coffee" : "~0.10.1",
-    "grunt-shell"          : "~0.7.0"
+    "grunt-shell"          : "~0.7.0",
+    "grunt-docco"          : "~0.3.3"
   },
   "author": {
     "name": "Stephen Handley",

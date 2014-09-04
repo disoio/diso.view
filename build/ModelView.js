@@ -15,15 +15,13 @@
     };
 
     function ModelView() {
+      var model_name;
       ModelView.__super__.constructor.apply(this, arguments);
+      model_name = this._modelName();
       if ('model' in this.data) {
-        this.model = this.data.model;
-      } else if (this.model_name) {
-        if (this.model_name in this.data) {
-          this.model = this.data[this.model_name];
-        } else if (this.model_name in this) {
-          this.model = this[this.model_name];
-        }
+        this[model_name] = this.data.model;
+      } else if (this.model_name && (this.model_name in this.data)) {
+        this[model_name] = this.data[this.model_name];
       }
       if (!this.model) {
         throw new Error("diso.view.Model: Missing model");

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>CollectionView.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="CollectionView.html">
+                CollectionView.coffee
+              </a>
+            
+              
+              <a class="source" href="ModelView.html">
+                ModelView.coffee
+              </a>
+            
+              
+              <a class="source" href="Page.html">
+                Page.coffee
+              </a>
+            
+              
+              <a class="source" href="View.html">
+                View.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>CollectionView.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h2 id="npm-dependencies">NPM dependencies</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p><a href="https://github.com/stephenhandley/type-of-is">type-of-is</a>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Type = <span class="hljs-built_in">require</span>(<span class="hljs-string">'type-of-is'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h2 id="local-dependencies">Local dependencies</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p><a href="./View.html">View</a>  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>View = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./View'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="throwerror">throwError</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Convenience method for throwing errors in this class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">throwError</span> = <span class="hljs-params">(msg)</span>-&gt;</span>
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Collection: <span class="hljs-subst">#{msg}</span>"</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h1 id="collectionview">CollectionView</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>A view subclass that is used for rendering collections</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CollectionView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">View</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>collection_name can be overridden to make data access
+more readable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  collection_name : <span class="hljs-literal">null</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h2 id="_collectionname">_collectionName</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>return the collection name for this view’s collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _collectionName : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@collection_name</span> || <span class="hljs-string">'_collection'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>This is set to true if this view’s items are View 
+subclasses. Used to determine how to render those items</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  item_is_view : <span class="hljs-literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="constructor">constructor</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Create a CollectionView</p>
+<h3 id="required-args">required args</h3>
+<p>When the constructor runs it must have one of the 
+following conditions met
+A. ‘collection’ in its data arg
+B. collection_name in its data arg if that has been set
+   in the child class
+C. child attribute set statically in child class’ body</p>
+<p>It must also have an item attribute that can either be 
+A. the constructor of a View to be created and rendered
+   for each item
+B. a template that will called on each model in the 
+   collection and should return a string of html</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  constructor : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-keyword">super</span> <span class="hljs-comment">#sets @data to data passed to constructor</span>
+
+    collection_name = <span class="hljs-property">@_collectionName</span>()
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'collection'</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>pass collection via constructor ‘collection’ opt 
+this also works if there is a custom @collection_name, in 
+which case it takes precedence of a @model_name opt</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      @[collection_name] = <span class="hljs-property">@data</span>.collection
+
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">and</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>when custom collection name has been set in child class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      @[collection_name] = <span class="hljs-property">@data</span>[<span class="hljs-property">@collection_name</span>]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>its also possible that the ‘collection’ accessor property defined 
+below can be overriden in child class in which case @collection
+will be the actual collection rather than property lookup 
+either way @collection should at this point return something 
+either set above or in the child class. otherwise throw error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">unless</span> <span class="hljs-property">@collection</span>
+      throwError(<span class="hljs-string">"Missing collection"</span>)
+
+    <span class="hljs-keyword">unless</span> <span class="hljs-property">@item</span> 
+      throwError(<span class="hljs-string">"Missing item template or view"</span>)
+    
+    <span class="hljs-property">@_setupItemViews</span>()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h2 id="addmodel">addModel</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Add a model to this collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addModel : <span class="hljs-function"><span class="hljs-params">(model)</span>-&gt;</span>
+    <span class="hljs-keyword">unless</span> Type(model.isEqual, Function)
+      throwError(<span class="hljs-string">"collection model missing isEqual method"</span>)
+    
+    index = <span class="hljs-literal">null</span>
+    len = <span class="hljs-property">@collection</span>.length
+    <span class="hljs-keyword">if</span> (len &gt; <span class="hljs-number">0</span>)
+      <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span>.(len - <span class="hljs-number">1</span>)]
+        other_model = <span class="hljs-property">@collection</span>[i]
+        <span class="hljs-keyword">if</span> model.isEqual(other_model)
+          index = i
+          <span class="hljs-keyword">break</span>
+
+    <span class="hljs-keyword">if</span> index
+      <span class="hljs-property">@collection</span>[index] = model
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@collection</span>.unshift(model)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2 id="refresh">refresh</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>refresh / rerender this view
+TODO: if removing subviews, shouldn’t rerun be necc.? </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(rerun = <span class="hljs-literal">true</span>)</span>-&gt;</span>
+    <span class="hljs-property">@removeAllSubviews</span>()
+    <span class="hljs-property">@setupItemViews</span>()
+    <span class="hljs-keyword">super</span>(rerun)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h2 id="stub-methods">STUB METHODS</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h2 id="wrapper">wrapper</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>This method will be passed this view’s rendered html 
+and can be used to optionally wrap it with some container</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  wrapper : <span class="hljs-function"><span class="hljs-params">(html)</span>-&gt;</span>
+    html</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h2 id="itemdata">itemData</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>This can be overriding by child class to pass custom data 
+to each item view. It will be augmented with two properties
+<em>model</em>, the model this view is reponsible for rendering, 
+and <em>collection_view</em>, the parent collection view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  itemData : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h2 id="internal-methods">INTERNAL METHODS</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <h2 id="template">template</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>The template for this collection view. This should in general
+not be overriden in child classes, unless you know what you’re 
+doing. Wrapper and the item template/view should be sufficient
+to achieve desired results. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  template : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    html = <span class="hljs-string">''</span>
+
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@item_is_view</span>
+      <span class="hljs-keyword">for</span> id, subview <span class="hljs-keyword">of</span> <span class="hljs-property">@subviews</span>()
+        html += subview.html()
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+        html += <span class="hljs-property">@item</span>(model)
+
+    <span class="hljs-property">@wrapper</span>(html)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h2 id="_setupitemviews">_setupItemViews</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>If the item attribute is a View constructor, add a subview for 
+each view in this view’s collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _setupItemViews : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> Type.extension(<span class="hljs-property">@item</span>, View)
+      <span class="hljs-property">@item_is_view</span> = <span class="hljs-literal">true</span>
+
+      ItemView = <span class="hljs-property">@item</span>
+      <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+        item_data = <span class="hljs-property">@itemData</span>()
+        item_data.model = model
+        item_data.collection_view = @
+
+        view = <span class="hljs-keyword">new</span> ItemView(item_data)
+        <span class="hljs-property">@addSubview</span>(view)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>We need to access the collection indirectly so as to support
+the different ways of specifying it in constructor / child class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Object.defineProperty(CollectionView.prototype, <span class="hljs-string">'collection'</span>, {
+  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    @[<span class="hljs-property">@_collectionName</span>()]
+
+  <span class="hljs-attribute">set</span>: <span class="hljs-function"><span class="hljs-params">(val)</span>-&gt;</span>
+    @[<span class="hljs-property">@_collectionName</span>()] = val
+})
+
+  
+<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = CollectionView</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
