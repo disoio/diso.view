@@ -28,6 +28,9 @@ class View
   # an id will be generated using [shortid](https://github.com/dylang/shortid)
   id : null
 
+  # jquery node holding this view
+  _$node : null
+
   # constructor
   # -----------
   # Create the view and generate an id if neccessary
@@ -57,7 +60,7 @@ class View
   refresh : (rerun = true)->
     @_removeBehaviors()
     html = @html()
-    @$node.replaceWith(html)
+    @$node().replaceWith(html)
     if rerun
       @run()
 
@@ -119,9 +122,14 @@ class View
   # -------
   # Overwrite the id of this view and update the 
   # associated dom node that contains it
-  setNode : (id)->
+  setId : (id)->
     @id = id
-    @$node = $("##{@id}")
+
+  $node : ()->
+    unless @_$node
+      @_$node = $("##{@id}")
+
+    @_$node
 
 
   # SUBVIEW METHODS
@@ -155,7 +163,7 @@ class View
     if subview.id of @_subviews
       delete @_subviews[subview.id]
       subview.parent = null
-      subview.removeBehaviors()
+      subview._removeBehaviors()
   
   # removeSubviews
   # --------------
@@ -201,10 +209,10 @@ class View
   # Find and setup behaviors for this node and all 
   # children with its behavior attr. 
   _addBehaviors : ()->
-    @_addBehavior(@$node)
+    @_addBehavior(@$node())
     
     attr = @_behaviorAttr()
-    behaviors = @$node.find("[#{attr}]")
+    behaviors = @$node().find("[#{attr}]")
     for node in behaviors
       $node = $(node)
       @_addBehavior($node)
@@ -246,9 +254,8 @@ class View
   #       removeEventHandlers() ?? Also probably need 
   #       to check namespacing 
   _removeBehaviors : ()->
-    if @$node
-      @$node.off()
-      @$node.find("*").off()
+    if @$node()
+      @$node().off().find("*").off()
 
   # _addViewId
   # ----------

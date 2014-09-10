@@ -106,19 +106,19 @@ class Page extends View
   # setBody
   # -------
   # set the body of this page
-  setBody : (body)->
+  setBody : (new_body)->
     if @_body
       @removeSubview(@_body)
-    @_body = body
+    @_body = new_body
     @addSubview(@_body)
   
   # swapBody 
   # --------
   # Change the body of this page to a different view
   swapBody : (new_body)->
-    $body = @_body.$node
-    $body.replaceWith(new_body.html())
+    $body = @_body.$node()
     @setBody(new_body)
+    $body.replaceWith(new_body.html())
     new_body.run()
 
   # TODODODODO

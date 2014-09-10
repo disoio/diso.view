@@ -375,10 +375,10 @@ returns underlying @meta object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setBody : <span class="hljs-function"><span class="hljs-params">(body)</span>-&gt;</span>
+            <div class="content"><div class='highlight'><pre>  setBody : <span class="hljs-function"><span class="hljs-params">(new_body)</span>-&gt;</span>
     <span class="hljs-keyword">if</span> <span class="hljs-property">@_body</span>
       <span class="hljs-property">@removeSubview</span>(<span class="hljs-property">@_body</span>)
-    <span class="hljs-property">@_body</span> = body
+    <span class="hljs-property">@_body</span> = new_body
     <span class="hljs-property">@addSubview</span>(<span class="hljs-property">@_body</span>)</pre></div></div>
             
         </li>
@@ -408,9 +408,9 @@ returns underlying @meta object</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  swapBody : <span class="hljs-function"><span class="hljs-params">(new_body)</span>-&gt;</span>
-    $body = <span class="hljs-property">@_body</span>.$node
-    $body.replaceWith(new_body.html())
+    $body = <span class="hljs-property">@_body</span>.$node()
     <span class="hljs-property">@setBody</span>(new_body)
+    $body.replaceWith(new_body.html())
     new_body.run()</pre></div></div>
             
         </li>

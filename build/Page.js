@@ -73,19 +73,19 @@
       return meta.title;
     };
 
-    Page.prototype.setBody = function(body) {
+    Page.prototype.setBody = function(new_body) {
       if (this._body) {
         this.removeSubview(this._body);
       }
-      this._body = body;
+      this._body = new_body;
       return this.addSubview(this._body);
     };
 
     Page.prototype.swapBody = function(new_body) {
       var $body;
-      $body = this._body.$node;
-      $body.replaceWith(new_body.html());
+      $body = this._body.$node();
       this.setBody(new_body);
+      $body.replaceWith(new_body.html());
       return new_body.run();
     };
 

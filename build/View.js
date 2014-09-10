@@ -20,6 +20,8 @@
   View = (function() {
     View.prototype.id = null;
 
+    View.prototype._$node = null;
+
     function View(data) {
       this.data = data;
       if (this.data == null) {
@@ -44,7 +46,7 @@
       }
       this._removeBehaviors();
       html = this.html();
-      this.$node.replaceWith(html);
+      this.$node().replaceWith(html);
       if (rerun) {
         return this.run();
       }
@@ -83,9 +85,15 @@
       return this.page().container.goto(args);
     };
 
-    View.prototype.setNode = function(id) {
-      this.id = id;
-      return this.$node = $("#" + this.id);
+    View.prototype.setId = function(id) {
+      return this.id = id;
+    };
+
+    View.prototype.$node = function() {
+      if (!this._$node) {
+        this._$node = $("#" + this.id);
+      }
+      return this._$node;
     };
 
     View.prototype.subviews = function() {
@@ -113,7 +121,7 @@
       if (subview.id in this._subviews) {
         delete this._subviews[subview.id];
         subview.parent = null;
-        return subview.removeBehaviors();
+        return subview._removeBehaviors();
       }
     };
 
@@ -146,9 +154,9 @@
 
     View.prototype._addBehaviors = function() {
       var $node, attr, behaviors, node, _i, _len, _results;
-      this._addBehavior(this.$node);
+      this._addBehavior(this.$node());
       attr = this._behaviorAttr();
-      behaviors = this.$node.find("[" + attr + "]");
+      behaviors = this.$node().find("[" + attr + "]");
       _results = [];
       for (_i = 0, _len = behaviors.length; _i < _len; _i++) {
         node = behaviors[_i];
@@ -182,9 +190,8 @@
     };
 
     View.prototype._removeBehaviors = function() {
-      if (this.$node) {
-        this.$node.off();
-        return this.$node.find("*").off();
+      if (this.$node()) {
+        return this.$node().off().find("*").off();
       }
     };
 
