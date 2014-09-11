@@ -80,7 +80,7 @@ class Page extends View
     @template()
 
   # setMeta 
-  # ----
+  # -------
   # Call with object to set those properties on @meta. 
   # when called with no arguments (i.e. by the container) it 
   # returns underlying @meta object
@@ -94,13 +94,22 @@ class Page extends View
     else
       @meta
 
+  # getMeta
+  # -------
+  # Get the underlying meta object which can be a plain object
+  # or a function. If its a function, call it to return plain
+  # object
+  getMeta : ()->
+    if Type(@meta, Function)
+      @meta()
+    else
+      @meta
+
   # title
   # -----
   # Returns the title for this page
   title : ()->
-    meta = @meta
-    if Type(meta, Function) 
-      meta = meta()
+    meta = @getMeta()
     meta.title
 
   # setBody
@@ -120,6 +129,19 @@ class Page extends View
     @setBody(new_body)
     $body.replaceWith(new_body.html())
     new_body.run()
+
+  # remove
+  # ------
+  # Remove the page and all its views
+  remove : ()->
+    @_body.removeAllSubviews()
+    @removeSubview(@_body)
+    @_body     = null
+    @store     = null
+    @route     = null
+    @url       = null
+    @container = null
+
 
   # TODODODODO
   # ----------

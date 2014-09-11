@@ -250,7 +250,7 @@ either set above or in the child class. otherwise throw error</p>
             
             <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">unless</span> <span class="hljs-property">@model</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Model: Missing model"</span>)</pre></div></div>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Model: Missing model: <span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span>"</span>)</pre></div></div>
             
         </li>
         

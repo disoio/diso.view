@@ -24,7 +24,7 @@
         this[model_name] = this.data[this.model_name];
       }
       if (!this.model) {
-        throw new Error("diso.view.Model: Missing model");
+        throw new Error("diso.view.Model: Missing model: " + this.constructor.name);
       }
     }
 

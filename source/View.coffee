@@ -31,6 +31,9 @@ class View
   # jquery node holding this view
   _$node : null
 
+  # memoized reference to this view's page
+  _page : null
+
   # constructor
   # -----------
   # Create the view and generate an id if neccessary
@@ -163,6 +166,9 @@ class View
     if subview.id of @_subviews
       delete @_subviews[subview.id]
       subview.parent = null
+      subview._$node = null
+      subview._page  = null
+      subview.data   = null
       subview._removeBehaviors()
   
   # removeSubviews
@@ -177,6 +183,7 @@ class View
   # Remove all subviews from this view
   removeAllSubviews : ()->
     for id, subview of @_subviews
+      subview.removeAllSubviews()
       @removeSubview(subview)
 
   

@@ -22,6 +22,8 @@
 
     View.prototype._$node = null;
 
+    View.prototype._page = null;
+
     function View(data) {
       this.data = data;
       if (this.data == null) {
@@ -121,6 +123,9 @@
       if (subview.id in this._subviews) {
         delete this._subviews[subview.id];
         subview.parent = null;
+        subview._$node = null;
+        subview._page = null;
+        subview.data = null;
         return subview._removeBehaviors();
       }
     };
@@ -141,6 +146,7 @@
       _results = [];
       for (id in _ref) {
         subview = _ref[id];
+        subview.removeAllSubviews();
         _results.push(this.removeSubview(subview));
       }
       return _results;

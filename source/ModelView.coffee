@@ -53,7 +53,7 @@ class ModelView extends View
     # either set above or in the child class. otherwise throw error
 
     unless @model
-      throw new Error("diso.view.Model: Missing model")
+      throw new Error("diso.view.Model: Missing model: #{@constructor.name}")
 
 # We need to access the model indirectly so as to support
 # the different ways of specifying it in constructor / child class

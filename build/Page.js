@@ -64,12 +64,17 @@
       }
     };
 
+    Page.prototype.getMeta = function() {
+      if (Type(this.meta, Function)) {
+        return this.meta();
+      } else {
+        return this.meta;
+      }
+    };
+
     Page.prototype.title = function() {
       var meta;
-      meta = this.meta;
-      if (Type(meta, Function)) {
-        meta = meta();
-      }
+      meta = this.getMeta();
       return meta.title;
     };
 
@@ -87,6 +92,16 @@
       this.setBody(new_body);
       $body.replaceWith(new_body.html());
       return new_body.run();
+    };
+
+    Page.prototype.remove = function() {
+      this._body.removeAllSubviews();
+      this.removeSubview(this._body);
+      this._body = null;
+      this.store = null;
+      this.route = null;
+      this.url = null;
+      return this.container = null;
     };
 
     Page.prototype.showModal = function() {};
