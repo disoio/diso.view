@@ -19,7 +19,7 @@ BEHAVIOR_ATTR = 'data-behavior'
 ID_ATTR_NAME  = 'id'
 
 # View
-# ======
+# ====
 # This is the base class used in the view hierarchy. It is 
 # responsible for rendering, behavior binding & handling, 
 # and managing the subviews it contains.
@@ -135,8 +135,8 @@ class View
     @_$node
 
 
-  # SUBVIEW METHODS
-  # ---------------
+  # *SUBVIEW METHODS*
+  # -----------------
 
   # subviews 
   # --------
@@ -187,8 +187,8 @@ class View
       @removeSubview(subview)
 
   
-  # STUB METHODS
-  # ------------
+  # *STUB METHODS*
+  # --------------
   # These methods should implemented by child classes 
 
   # setup
@@ -208,8 +208,8 @@ class View
     </h1>
     """
 
-  # INTERNAL METHODS
-  # ----------------
+  # *INTERNAL METHODS*
+  # ------------------
 
   # _addBehaviors
   # -------------

@@ -110,8 +110,8 @@ class CollectionView extends View
     @setupItemViews()
     super(rerun)
 
-  # STUB METHODS
-  # ------------
+  # *STUB METHODS*
+  # --------------
 
   # wrapper
   # -------
@@ -129,8 +129,8 @@ class CollectionView extends View
   itemData : ()->
     {}
 
-  # INTERNAL METHODS
-  # ----------------
+  # *INTERNAL METHODS*
+  # ------------------
 
   # template
   # --------

@@ -1,5 +1,5 @@
 # Local dependencies
-# ------------------ 
+# ------------------
 # [View](./View.html)  
 # [CollectionView](./CollectionView.html)  
 # [Page](./Page.html)  

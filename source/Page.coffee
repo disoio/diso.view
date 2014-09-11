@@ -143,13 +143,13 @@ class Page extends View
     @container = null
 
 
-  # TODODODODO
-  # ----------
+  # *TODODODODO*
+  # ------------
   showModal : ()->
   hideModal : ()->
 
-  # STUB METHODS
-  # ------------
+  # *STUB METHODS*
+  # --------------
   # These methods should/may be implemented by child classes 
 
   # load
