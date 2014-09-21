@@ -1,11 +1,13 @@
 (function() {
-  var CollectionView, Type, View, throwError,
+  var CollectionView, ModelView, Type, View, throwError,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Type = require('type-of-is');
 
   View = require('./View');
+
+  ModelView = require('./ModelView');
 
   throwError = function(msg) {
     throw new Error("diso.view.Collection: " + msg);
@@ -68,7 +70,7 @@
         rerun = true;
       }
       this.removeAllSubviews();
-      this.setupItemViews();
+      this._setupItemViews();
       return CollectionView.__super__.refresh.call(this, rerun);
     };
 
@@ -81,7 +83,7 @@
     };
 
     CollectionView.prototype.template = function() {
-      var html, id, model, subview, _i, _len, _ref, _ref1;
+      var element, html, id, subview, _i, _len, _ref, _ref1;
       html = '';
       if (this.item_is_view) {
         _ref = this.subviews();
@@ -92,25 +94,31 @@
       } else {
         _ref1 = this.collection;
         for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          model = _ref1[_i];
-          html += this.item(model);
+          element = _ref1[_i];
+          html += this.item(element);
         }
       }
       return this.wrapper(html);
     };
 
     CollectionView.prototype._setupItemViews = function() {
-      var ItemView, item_data, model, view, _i, _len, _ref, _results;
+      var ItemView, element, item_data, k, v, view, _i, _len, _ref, _results;
       if (Type.extension(this.item, View)) {
         this.item_is_view = true;
         ItemView = this.item;
         _ref = this.collection;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          model = _ref[_i];
+          element = _ref[_i];
           item_data = this.itemData();
-          item_data.model = model;
-          item_data.collection_view = this;
+          if (Type.extension(ItemView, ModelView)) {
+            item_data.model = element;
+          } else {
+            for (k in element) {
+              v = element[k];
+              item_data[k] = v;
+            }
+          }
           view = new ItemView(item_data);
           _results.push(this.addSubview(view));
         }

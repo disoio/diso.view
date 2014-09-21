@@ -15,8 +15,11 @@ VIEW_REGEX = (()->
 
 # Attributes used for identification and event handling
 # in a view's root html node
-BEHAVIOR_ATTR = 'data-behavior'
-ID_ATTR_NAME  = 'id'
+ID_ATTR_NAME       = 'id'
+BEHAVIOR_ATTR      = 'data-behavior'
+BEHAVIOR_DELIMITER = ','
+BEHAVIOR_SEPARATOR = ':'
+
 
 # View
 # ====
@@ -81,8 +84,14 @@ class View
   # will be bound to the event. When the event is triggered on 
   # the element containing this behavior attribute, the handler
   # will be run. 
-  behavior : (value)->
-    "#{@_behaviorAttr()}=\"#{value}\""
+  #
+  # **values** : a string or array of strings with the colon
+  #              separated event type and handler name
+  behavior : (values)->
+    unless Type(values, Array)
+      values = [values]
+
+    "#{@_behaviorAttr()}=\"#{values.join(BEHAVIOR_DELIMITER)}\""
 
   # run
   # ---
@@ -231,25 +240,29 @@ class View
   # the named event
   _addBehavior : ($node)->
     attr = @_behaviorAttr()
-    value = $node.attr(attr)
-    unless value
+    values = $node.attr(attr)
+    unless values
       return
 
-    [event_name, handler_name] = value.split(':')
+    values = values.split(BEHAVIOR_DELIMITER)
 
-    if handler_name of @
-      event_name = @_namespaceEvent(event_name)
-      handler = @[handler_name]
-      $node.on(event_name, (event)->
-        handler(
-          event : event
-          node  : this
-          $node : $node
-        )
-      )
-    else
-      # TODO : better error handling
-      console.error("no event handler on view named #{handler_name}")
+    for value in values
+      do (value)=>
+        [event_name, handler_name] = value.split(BEHAVIOR_SEPARATOR)
+
+        if handler_name of @
+          event_name = @_namespaceEvent(event_name)
+          handler = @[handler_name]
+          $node.on(event_name, (event)->
+            handler(
+              event : event
+              node  : this
+              $node : $node
+            )
+          )
+        else
+          # TODO : better error handling
+          console.error("no event handler on view named #{handler_name}")
 
   # _removeBehaviors
   # ----------------

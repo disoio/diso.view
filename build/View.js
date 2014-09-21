@@ -1,5 +1,5 @@
 (function() {
-  var $, BEHAVIOR_ATTR, ID_ATTR_NAME, ShortId, Type, VIEW_REGEX, View;
+  var $, BEHAVIOR_ATTR, BEHAVIOR_DELIMITER, BEHAVIOR_SEPARATOR, ID_ATTR_NAME, ShortId, Type, VIEW_REGEX, View;
 
   $ = require('jquery');
 
@@ -13,9 +13,13 @@
     return new RegExp(regex_str, 'm');
   })();
 
+  ID_ATTR_NAME = 'id';
+
   BEHAVIOR_ATTR = 'data-behavior';
 
-  ID_ATTR_NAME = 'id';
+  BEHAVIOR_DELIMITER = ',';
+
+  BEHAVIOR_SEPARATOR = ':';
 
   View = (function() {
     View.prototype.id = null;
@@ -54,8 +58,11 @@
       }
     };
 
-    View.prototype.behavior = function(value) {
-      return "" + (this._behaviorAttr()) + "=\"" + value + "\"";
+    View.prototype.behavior = function(values) {
+      if (!Type(values, Array)) {
+        values = [values];
+      }
+      return "" + (this._behaviorAttr()) + "=\"" + (values.join(BEHAVIOR_DELIMITER)) + "\"";
     };
 
     View.prototype.run = function() {
@@ -173,26 +180,37 @@
     };
 
     View.prototype._addBehavior = function($node) {
-      var attr, event_name, handler, handler_name, value, _ref;
+      var attr, value, values, _i, _len, _results;
       attr = this._behaviorAttr();
-      value = $node.attr(attr);
-      if (!value) {
+      values = $node.attr(attr);
+      if (!values) {
         return;
       }
-      _ref = value.split(':'), event_name = _ref[0], handler_name = _ref[1];
-      if (handler_name in this) {
-        event_name = this._namespaceEvent(event_name);
-        handler = this[handler_name];
-        return $node.on(event_name, function(event) {
-          return handler({
-            event: event,
-            node: this,
-            $node: $node
-          });
-        });
-      } else {
-        return console.error("no event handler on view named " + handler_name);
+      values = values.split(BEHAVIOR_DELIMITER);
+      _results = [];
+      for (_i = 0, _len = values.length; _i < _len; _i++) {
+        value = values[_i];
+        _results.push((function(_this) {
+          return function(value) {
+            var event_name, handler, handler_name, _ref;
+            _ref = value.split(BEHAVIOR_SEPARATOR), event_name = _ref[0], handler_name = _ref[1];
+            if (handler_name in _this) {
+              event_name = _this._namespaceEvent(event_name);
+              handler = _this[handler_name];
+              return $node.on(event_name, function(event) {
+                return handler({
+                  event: event,
+                  node: this,
+                  $node: $node
+                });
+              });
+            } else {
+              return console.error("no event handler on view named " + handler_name);
+            }
+          };
+        })(this)(value));
       }
+      return _results;
     };
 
     View.prototype._removeBehaviors = function() {

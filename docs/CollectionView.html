@@ -104,11 +104,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p><a href="./View.html">View</a>  </p>
+              <p><a href="./View.html">View</a><br><a href="./ModelView.html">ModelView</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>View = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./View'</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>View      = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./View'</span>)
+ModelView = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ModelView'</span>)</pre></div></div>
             
         </li>
         
@@ -407,7 +408,7 @@ TODO: if removing subviews, shouldn’t rerun be necc.? </p>
             
             <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(rerun = <span class="hljs-literal">true</span>)</span>-&gt;</span>
     <span class="hljs-property">@removeAllSubviews</span>()
-    <span class="hljs-property">@setupItemViews</span>()
+    <span class="hljs-property">@_setupItemViews</span>()
     <span class="hljs-keyword">super</span>(rerun)</pre></div></div>
             
         </li>
@@ -487,10 +488,11 @@ and can be used to optionally wrap it with some container</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>This can be overriding by child class to pass custom data 
-to each item view. It will be augmented with two properties
-<em>model</em>, the model this view is reponsible for rendering, 
-and <em>collection_view</em>, the parent collection view</p>
+              <p>This can be overridden by child class to pass custom data 
+to each item view. If the item view is a ModelView, a model 
+attribute will be added containing the model that view is 
+reponsible for rendering. Otherwise the element object will
+have all its properties adding to the item data. </p>
 
             </div>
             
@@ -558,8 +560,8 @@ to achieve desired results. </p>
       <span class="hljs-keyword">for</span> id, subview <span class="hljs-keyword">of</span> <span class="hljs-property">@subviews</span>()
         html += subview.html()
     <span class="hljs-keyword">else</span>
-      <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
-        html += <span class="hljs-property">@item</span>(model)
+      <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+        html += <span class="hljs-property">@item</span>(element)
 
     <span class="hljs-property">@wrapper</span>(html)</pre></div></div>
             
@@ -595,10 +597,14 @@ each view in this view’s collection</p>
       <span class="hljs-property">@item_is_view</span> = <span class="hljs-literal">true</span>
 
       ItemView = <span class="hljs-property">@item</span>
-      <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+      <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
         item_data = <span class="hljs-property">@itemData</span>()
-        item_data.model = model
-        item_data.collection_view = @
+
+        <span class="hljs-keyword">if</span> Type.extension(ItemView, ModelView)
+          item_data.model = element
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">of</span> element
+            item_data[k] = v
 
         view = <span class="hljs-keyword">new</span> ItemView(item_data)
         <span class="hljs-property">@addSubview</span>(view)</pre></div></div>

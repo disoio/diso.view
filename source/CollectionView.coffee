@@ -6,7 +6,9 @@ Type = require('type-of-is')
 # Local dependencies
 # ------------------
 # [View](./View.html)  
-View = require('./View')
+# [ModelView](./ModelView.html)
+View      = require('./View')
+ModelView = require('./ModelView')
 
 # throwError
 # ----------
@@ -107,7 +109,7 @@ class CollectionView extends View
   # TODO: if removing subviews, shouldn't rerun be necc.? 
   refresh : (rerun = true)->
     @removeAllSubviews()
-    @setupItemViews()
+    @_setupItemViews()
     super(rerun)
 
   # *STUB METHODS*
@@ -122,10 +124,11 @@ class CollectionView extends View
 
   # itemData
   # --------
-  # This can be overriding by child class to pass custom data 
-  # to each item view. It will be augmented with two properties
-  # *model*, the model this view is reponsible for rendering, 
-  # and *collection_view*, the parent collection view
+  # This can be overridden by child class to pass custom data 
+  # to each item view. If the item view is a ModelView, a model 
+  # attribute will be added containing the model that view is 
+  # reponsible for rendering. Otherwise the element object will
+  # have all its properties adding to the item data. 
   itemData : ()->
     {}
 
@@ -145,8 +148,8 @@ class CollectionView extends View
       for id, subview of @subviews()
         html += subview.html()
     else
-      for model in @collection
-        html += @item(model)
+      for element in @collection
+        html += @item(element)
 
     @wrapper(html)
 
@@ -159,10 +162,14 @@ class CollectionView extends View
       @item_is_view = true
 
       ItemView = @item
-      for model in @collection
+      for element in @collection
         item_data = @itemData()
-        item_data.model = model
-        item_data.collection_view = @
+
+        if Type.extension(ItemView, ModelView)
+          item_data.model = element
+        else
+          for k,v of element
+            item_data[k] = v
 
         view = new ItemView(item_data)
         @addSubview(view)
