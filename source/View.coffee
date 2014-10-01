@@ -64,9 +64,11 @@ class View
   # -------
   # Refresh this views content and optionally rerun it
   refresh : (rerun = true)->
+    @removing()
     @_removeBehaviors()
     html = @html()
     @$node().replaceWith(html)
+    @_$node = null
     if rerun
       @run()
 
@@ -173,6 +175,7 @@ class View
   # Remove a subview from this view
   removeSubview : (subview)->
     if subview.id of @_subviews
+      subview.removing()
       delete @_subviews[subview.id]
       subview.parent = null
       subview._$node = null
@@ -216,6 +219,12 @@ class View
       You need to add a <strong>template</strong> method to your view
     </h1>
     """
+
+  # removing
+  # --------
+  # Called before this view is removed, giving the child class
+  # a chance to clean up any resources
+  removing : ()->
 
   # *INTERNAL METHODS*
   # ------------------

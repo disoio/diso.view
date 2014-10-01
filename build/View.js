@@ -50,9 +50,11 @@
       if (rerun == null) {
         rerun = true;
       }
+      this.removing();
       this._removeBehaviors();
       html = this.html();
       this.$node().replaceWith(html);
+      this._$node = null;
       if (rerun) {
         return this.run();
       }
@@ -128,6 +130,7 @@
 
     View.prototype.removeSubview = function(subview) {
       if (subview.id in this._subviews) {
+        subview.removing();
         delete this._subviews[subview.id];
         subview.parent = null;
         subview._$node = null;
@@ -164,6 +167,8 @@
     View.prototype.template = function() {
       return "<h1>\n  You need to add a <strong>template</strong> method to your view\n</h1>";
     };
+
+    View.prototype.removing = function() {};
 
     View.prototype._addBehaviors = function() {
       var $node, attr, behaviors, node, _i, _len, _results;

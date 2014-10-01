@@ -73,12 +73,6 @@ class Page extends View
   setData : (data)->
     @data = data
 
-  # html 
-  # ----
-  # Render the template for this page as a string
-  html : ()->
-    @template()
-
   # setMeta 
   # -------
   # Call with object to set those properties on @meta. 

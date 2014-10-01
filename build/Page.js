@@ -43,10 +43,6 @@
       return this.data = data;
     };
 
-    Page.prototype.html = function() {
-      return this.template();
-    };
-
     Page.prototype.setMeta = function(metadata) {
       var k, v, _results;
       if (metadata) {

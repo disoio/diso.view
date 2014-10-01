@@ -74,8 +74,8 @@
       return CollectionView.__super__.refresh.call(this, rerun);
     };
 
-    CollectionView.prototype.wrapper = function(html) {
-      return html;
+    CollectionView.prototype.wrapper = function(contents) {
+      return "<div>\n  " + contents + "\n</div>";
     };
 
     CollectionView.prototype.itemData = function() {

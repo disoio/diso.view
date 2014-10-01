@@ -119,8 +119,12 @@ class CollectionView extends View
   # -------
   # This method will be passed this view's rendered html 
   # and can be used to optionally wrap it with some container
-  wrapper : (html)->
-    html
+  wrapper : (contents)->
+    """
+      <div>
+        #{contents}
+      </div>
+    """
 
   # itemData
   # --------
