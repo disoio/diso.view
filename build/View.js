@@ -107,6 +107,15 @@
       return this._$node;
     };
 
+    View.prototype.remove = function() {
+      if (this.parent) {
+        this.parent.removeSubview(this);
+      } else {
+        this.removing();
+      }
+      return this.$node().remove();
+    };
+
     View.prototype.subviews = function() {
       return this._subviews;
     };

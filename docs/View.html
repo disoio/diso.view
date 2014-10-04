@@ -496,7 +496,15 @@ associated dom node that contains it</p>
     <span class="hljs-keyword">unless</span> <span class="hljs-property">@_$node</span>
       <span class="hljs-property">@_$node</span> = $(<span class="hljs-string">"#<span class="hljs-subst">#{<span class="hljs-property">@id</span>}</span>"</span>)
 
-    <span class="hljs-property">@_$node</span></pre></div></div>
+    <span class="hljs-property">@_$node</span>
+
+  remove : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@parent</span>
+      <span class="hljs-property">@parent</span>.removeSubview(@)
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@removing</span>()
+      
+    <span class="hljs-property">@$node</span>().remove()</pre></div></div>
             
         </li>
         

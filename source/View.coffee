@@ -145,6 +145,13 @@ class View
 
     @_$node
 
+  remove : ()->
+    if @parent
+      @parent.removeSubview(@)
+    else
+      @removing()
+      
+    @$node().remove()
 
   # *SUBVIEW METHODS*
   # -----------------
