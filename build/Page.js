@@ -33,7 +33,7 @@
 
     function Page(args) {
       Page.__super__.constructor.call(this, args.data || {});
-      this.store = args.store;
+      this.models = args.models;
       this.route = args.route;
       this.url = "" + args.origin + (this.route.path());
       this.container = args.container;

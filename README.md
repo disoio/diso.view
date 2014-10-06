@@ -1,13 +1,13 @@
 diso.view
 =========
 
-0.0.20
+0.0.21
 
 Description
 -----------
 Views!
 
-pre release derp ... p roper docs in progress but code is commented with docco output in /docs
+pre release derp ... proper docs in progress but code is commented with docco output in /docs
 
 Internal API Notes
 ------------------

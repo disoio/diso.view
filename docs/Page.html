@@ -216,7 +216,7 @@ If function will be called and should return an object</p>
             
             <div class="content"><div class='highlight'><pre>  constructor : <span class="hljs-function"><span class="hljs-params">(args)</span>-&gt;</span>
     <span class="hljs-keyword">super</span>(args.data || {})
-    <span class="hljs-property">@store</span>     = args.store
+    <span class="hljs-property">@models</span>    = args.models
     <span class="hljs-property">@route</span>     = args.route
     <span class="hljs-property">@url</span>       = <span class="hljs-string">"<span class="hljs-subst">#{args.origin}</span><span class="hljs-subst">#{<span class="hljs-property">@route</span>.path()}</span>"</span>
     <span class="hljs-property">@container</span> = args.container</pre></div></div>

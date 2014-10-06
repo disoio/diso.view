@@ -62,7 +62,7 @@ class Page extends View
   #                 constructor arg)
   constructor : (args)->
     super(args.data || {})
-    @store     = args.store
+    @models    = args.models
     @route     = args.route
     @url       = "#{args.origin}#{@route.path()}"
     @container = args.container
