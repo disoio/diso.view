@@ -73,6 +73,12 @@ class Page extends View
   setData : (data)->
     @data = data
 
+  # key
+  # ---
+  # Key used for identifying a page
+  key : ()->
+    "#{@constructor.name}:#{@id}"
+
   # setMeta 
   # -------
   # Call with object to set those properties on @meta. 

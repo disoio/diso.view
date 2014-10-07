@@ -43,6 +43,10 @@
       return this.data = data;
     };
 
+    Page.prototype.key = function() {
+      return "" + this.constructor.name + ":" + this.id;
+    };
+
     Page.prototype.setMeta = function(metadata) {
       var k, v, _results;
       if (metadata) {
