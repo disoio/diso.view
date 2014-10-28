@@ -96,6 +96,10 @@
       return this.page().container.goto(args);
     };
 
+    View.prototype.user = function() {
+      return this.page().user;
+    };
+
     View.prototype.setId = function(id) {
       return this.id = id;
     };

@@ -132,6 +132,12 @@ class View
   goto : (args)->
     @page().container.goto(args)
 
+  # user
+  # ----
+  # Get the current user from this view's page
+  user : ()->
+    @page().user
+
   # setNode
   # -------
   # Overwrite the id of this view and update the 

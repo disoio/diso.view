@@ -34,6 +34,8 @@ class Page extends View
     type        : null
   }
 
+  requires_user : false
+
   # constructor
   # -----------
   # Create a page
@@ -60,18 +62,45 @@ class Page extends View
   #                 serverside render and so can be sent along
   #                 with the view id_map and so is set via this
   #                 constructor arg)
+  #
+  # **user**      : Object representing current user
+  # 
   constructor : (args)->
     super(args.data || {})
     @models    = args.models
     @route     = args.route
     @url       = "#{args.origin}#{@route.path()}"
     @container = args.container
+    @user      = args.user
 
   # setData
   # -------
   # Set the data for this page.
   setData : (data)->
     @data = data
+
+  # hasUser
+  # -------
+  # Returns true if user is not null
+  hasUser : ()->
+    !!@user
+
+  # canLoad
+  # -------
+  # Returns true if this page is currently able to load.
+  # The common case where this is false is when the page 
+  # requires a user but does not have one 
+  canLoad : ()->
+    not (@requires_user and (not @hasUser()))
+
+  # html 
+  # ----
+  # Conditionally renders either template or loadingTemplate
+  html : ()->
+    if @canLoad()
+      super()
+    else
+      @loadingTemplate()
 
   # key
   # ---
@@ -142,7 +171,6 @@ class Page extends View
     @url       = null
     @container = null
 
-
   # *TODODODODO*
   # ------------
   showModal : ()->
@@ -175,6 +203,18 @@ class Page extends View
       @_body.html()
     else
       ''
+
+  # loadingTemplate
+  # ---------------
+  # Called when this page is going to be loaded
+  loadingTemplate : ()->
+    """
+    <div class="loading">
+      <div class="loading_message">
+        Loading...
+      </div>
+    </div>
+    """
 
   # headers
   # -------

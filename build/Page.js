@@ -31,16 +31,35 @@
       type: null
     };
 
+    Page.prototype.requires_user = false;
+
     function Page(args) {
       Page.__super__.constructor.call(this, args.data || {});
       this.models = args.models;
       this.route = args.route;
       this.url = "" + args.origin + (this.route.path());
       this.container = args.container;
+      this.user = args.user;
     }
 
     Page.prototype.setData = function(data) {
       return this.data = data;
+    };
+
+    Page.prototype.hasUser = function() {
+      return !!this.user;
+    };
+
+    Page.prototype.canLoad = function() {
+      return !(this.requires_user && (!this.hasUser()));
+    };
+
+    Page.prototype.html = function() {
+      if (this.canLoad()) {
+        return Page.__super__.html.call(this);
+      } else {
+        return this.loadingTemplate();
+      }
     };
 
     Page.prototype.key = function() {
@@ -120,6 +139,10 @@
       } else {
         return '';
       }
+    };
+
+    Page.prototype.loadingTemplate = function() {
+      return "<div class=\"loading\">\n  <div class=\"loading_message\">\n    Loading...\n  </div>\n</div>";
     };
 
     Page.prototype.headers = function() {
