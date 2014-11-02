@@ -268,12 +268,20 @@ B. a template that will called on each model in the
             </div>
             
             <div class="content"><div class='highlight'><pre>
-  constructor : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-keyword">super</span> <span class="hljs-comment">#sets @data to data passed to constructor</span>
+  constructor : <span class="hljs-function"><span class="hljs-params">(args)</span>-&gt;</span>
+    args.data ?= {}
 
-    collection_name = <span class="hljs-property">@_collectionName</span>()
+    collection = <span class="hljs-literal">null</span>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'collection'</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>)</pre></div></div>
+    collection_in_args = (<span class="hljs-string">'collection'</span> <span class="hljs-keyword">of</span> args)
+
+    <span class="hljs-keyword">if</span> collection_in_args
+      collection = args.collection
+      <span class="hljs-keyword">delete</span> args.collection
+
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">and</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">of</span> args.data))
+      <span class="hljs-keyword">if</span> collection_in_args
+        throwError(<span class="hljs-string">"Can't pass collection arg and named collection in data"</span>)</pre></div></div>
             
         </li>
         
@@ -284,15 +292,11 @@ B. a template that will called on each model in the
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>pass collection via constructor ‘collection’ opt 
-this also works if there is a custom @collection_name, in 
-which case it takes precedence of a @model_name opt</p>
+              <p>when custom collection name has been set in child class</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      @[collection_name] = <span class="hljs-property">@data</span>.collection
-
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">and</span> (<span class="hljs-property">@collection_name</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>))</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      collection = args.data[<span class="hljs-property">@collection_name</span>]</pre></div></div>
             
         </li>
         
@@ -303,11 +307,25 @@ which case it takes precedence of a @model_name opt</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>when custom collection name has been set in child class</p>
+              <p>its also possible that the ‘collection’ accessor property defined 
+below can be overriden in child class in which case @collection
+will be the actual collection rather than property lookup 
+either way @collection should at this point return something 
+either set above or in the child class. otherwise throw error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      @[collection_name] = <span class="hljs-property">@data</span>[<span class="hljs-property">@collection_name</span>]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">unless</span> collection
+      throwError(<span class="hljs-string">"Missing collection in <span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span>"</span>)
+
+    <span class="hljs-keyword">unless</span> <span class="hljs-property">@item</span> 
+      throwError(<span class="hljs-string">"Missing item template or view"</span>)
+    
+    <span class="hljs-keyword">super</span>(args)
+    collection_name = <span class="hljs-property">@_collectionName</span>()
+    @[collection_name] = collection
+    <span class="hljs-property">@_setupItemViews</span>()</pre></div></div>
             
         </li>
         
@@ -318,22 +336,9 @@ which case it takes precedence of a @model_name opt</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>its also possible that the ‘collection’ accessor property defined 
-below can be overriden in child class in which case @collection
-will be the actual collection rather than property lookup 
-either way @collection should at this point return something 
-either set above or in the child class. otherwise throw error</p>
+              <h2 id="addmodel">addModel</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>
-    <span class="hljs-keyword">unless</span> <span class="hljs-property">@collection</span>
-      throwError(<span class="hljs-string">"Missing collection"</span>)
-
-    <span class="hljs-keyword">unless</span> <span class="hljs-property">@item</span> 
-      throwError(<span class="hljs-string">"Missing item template or view"</span>)
-    
-    <span class="hljs-property">@_setupItemViews</span>()</pre></div></div>
             
         </li>
         
@@ -344,26 +349,13 @@ either set above or in the child class. otherwise throw error</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="addmodel">addModel</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
               <p>Add a model to this collection</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  addModel : <span class="hljs-function"><span class="hljs-params">(model)</span>-&gt;</span>
     <span class="hljs-keyword">unless</span> Type(model.isEqual, Function)
-      throwError(<span class="hljs-string">"collection model missing isEqual method"</span>)
+      throwError(<span class="hljs-string">"Collection model missing isEqual method"</span>)
     
     index = <span class="hljs-literal">null</span>
     len = <span class="hljs-property">@collection</span>.length
@@ -382,11 +374,11 @@ either set above or in the child class. otherwise throw error</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h2 id="refresh">refresh</h2>
 
@@ -395,11 +387,11 @@ either set above or in the child class. otherwise throw error</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>refresh / rerender this view
 TODO: if removing subviews, shouldn’t rerun be necc.? </p>
@@ -414,14 +406,26 @@ TODO: if removing subviews, shouldn’t rerun be necc.? </p>
         </li>
         
         
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
-
+              
             </div>
             
         </li>
@@ -433,7 +437,8 @@ TODO: if removing subviews, shouldn’t rerun be necc.? </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              
+              <h2 id="wrapper">wrapper</h2>
+
             </div>
             
         </li>
@@ -444,19 +449,6 @@ TODO: if removing subviews, shouldn’t rerun be necc.? </p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <h2 id="wrapper">wrapper</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>This method will be passed this view’s rendered html 
 and can be used to optionally wrap it with some container</p>
@@ -473,11 +465,11 @@ and can be used to optionally wrap it with some container</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2 id="itemdata">itemData</h2>
 
@@ -486,11 +478,11 @@ and can be used to optionally wrap it with some container</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>This can be overridden by child class to pass custom data 
 to each item view. If the item view is a ModelView, a model 
@@ -506,14 +498,26 @@ have all its properties adding to the item data. </p>
         </li>
         
         
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h2 id="-internal-methods-"><em>INTERNAL METHODS</em></h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h2 id="-internal-methods-"><em>INTERNAL METHODS</em></h2>
-
+              
             </div>
             
         </li>
@@ -525,7 +529,8 @@ have all its properties adding to the item data. </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              
+              <h2 id="template">template</h2>
+
             </div>
             
         </li>
@@ -536,19 +541,6 @@ have all its properties adding to the item data. </p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <h2 id="template">template</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>The template for this collection view. This should in general
 not be overriden in child classes, unless you know what you’re 
@@ -564,10 +556,23 @@ to achieve desired results. </p>
       <span class="hljs-keyword">for</span> id, subview <span class="hljs-keyword">of</span> <span class="hljs-property">@subviews</span>()
         html += subview.html()
     <span class="hljs-keyword">else</span>
-      <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
-        html += <span class="hljs-property">@item</span>(element)
+      <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+        html += <span class="hljs-property">@item</span>(item)
 
     <span class="hljs-property">@wrapper</span>(html)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h2 id="_setupitemviews">_setupItemViews</h2>
+
+            </div>
             
         </li>
         
@@ -577,19 +582,6 @@ to achieve desired results. </p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h2 id="_setupitemviews">_setupItemViews</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>If the item attribute is a View constructor, add a subview for 
 each view in this view’s collection</p>
@@ -601,14 +593,17 @@ each view in this view’s collection</p>
       <span class="hljs-property">@item_is_view</span> = <span class="hljs-literal">true</span>
 
       ItemView = <span class="hljs-property">@item</span>
-      <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
-        item_data = <span class="hljs-property">@itemData</span>()
-
+      <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
+        item_data = {
+          user : <span class="hljs-property">@user</span>
+          data : <span class="hljs-property">@itemData</span>()
+        }
+        
         <span class="hljs-keyword">if</span> Type.extension(ItemView, ModelView)
-          item_data.model = element
+          item_data.model = item
         <span class="hljs-keyword">else</span>
-          <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">of</span> element
-            item_data[k] = v
+          <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">of</span> item
+            item_data.data[k] = v
 
         view = <span class="hljs-keyword">new</span> ItemView(item_data)
         <span class="hljs-property">@addSubview</span>(view)</pre></div></div>
@@ -616,11 +611,11 @@ each view in this view’s collection</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>We need to access the collection indirectly so as to support
 the different ways of specifying it in constructor / child class</p>
@@ -636,7 +631,7 @@ the different ways of specifying it in constructor / child class</p>
 })
 
   
-<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = CollectionView</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = CollectionView</pre></div></div>
             
         </li>
         

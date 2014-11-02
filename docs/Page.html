@@ -120,7 +120,7 @@ Type = <span class="hljs-built_in">require</span>(<span class="hljs-string">'typ
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h1 id="page">Page</h1>
+              <h1 id="loadingview">LoadingView</h1>
 
             </div>
             
@@ -133,11 +133,50 @@ Type = <span class="hljs-built_in">require</span>(<span class="hljs-string">'typ
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
+              <p>Placeholder loading view. Pages can overide this with 
+via ‘loading_view’ attribute on child class of Page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LoadingView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">View</span></span>
+  id : <span class="hljs-string">'loading'</span>
+
+  template : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-string">"""
+    &lt;div&gt;
+      &lt;div class="loading_message"&gt;
+        Loading...
+      &lt;/div&gt;
+    &lt;/div&gt;
+    """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h1 id="page">Page</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
               <p>A page is a view that is at the root of a view hierarchy
 and it is responsible for loading the data needed to render
 it’s child views, adding them as subviews as providing them 
 process through which to subscribe to and fetch data from 
-a datastore</p>
+models</p>
 
             </div>
             
@@ -152,11 +191,11 @@ a datastore</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Child classes override this. Can be function or object
 If function will be called and should return an object</p>
@@ -170,60 +209,11 @@ If function will be called and should return an object</p>
     type        : <span class="hljs-literal">null</span>
   }
 
-  requires_user : <span class="hljs-literal">false</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="constructor">constructor</h2>
+  requires_user : <span class="hljs-literal">false</span>
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Create a page</p>
-<h3 id="required-args">required args</h3>
-<p><strong>store</strong>  : the store for this page</p>
-<p><strong>route</strong>  : the route for this page</p>
-<p><strong>origin</strong> : the origin where this page is served from 
-            i.e. <a href="https://blah.example.com">https://blah.example.com</a></p>
-<h3 id="optional-args">optional args</h3>
-<p><strong>container</strong> : the container for this page. this isn’t
-                used on the server, but should be present
-                in the client in order to provide access 
-                to goto and other container methods</p>
-<p><strong>data</strong>      : In general, the page will be fetching its 
-                own data via its store. The one exception
-                is when the data is already available (for
-                example, during the initialize process in 
-                diso.core the data was available during the
-                serverside render and so can be sent along
-                with the view id_map and so is set via this
-                constructor arg)</p>
-<p><strong>user</strong>      : Object representing current user</p>
+  loading_view : LoadingView
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  constructor : <span class="hljs-function"><span class="hljs-params">(args)</span>-&gt;</span>
-    <span class="hljs-keyword">super</span>(args.data || {})
-    <span class="hljs-property">@models</span>    = args.models
-    <span class="hljs-property">@route</span>     = args.route
-    <span class="hljs-property">@url</span>       = <span class="hljs-string">"<span class="hljs-subst">#{args.origin}</span><span class="hljs-subst">#{<span class="hljs-property">@route</span>.path()}</span>"</span>
-    <span class="hljs-property">@container</span> = args.container
-    <span class="hljs-property">@user</span>      = args.user</pre></div></div>
+  is_page : <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -234,7 +224,7 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h2 id="setdata">setData</h2>
+              <h2 id="constructor">constructor</h2>
 
             </div>
             
@@ -247,12 +237,22 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Set the data for this page.</p>
+              <p>Create a page</p>
+<h3 id="required-args">required args</h3>
+<p><strong>models</strong> : models used by this page</p>
+<p><strong>route</strong>  : the route for this page</p>
+<p><strong>origin</strong> : the origin where this page is served from 
+            i.e. <a href="https://blah.example.com">https://blah.example.com</a></p>
+<p><strong>user</strong> : Object representing current user</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setData : <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
-    <span class="hljs-property">@data</span> = data</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  constructor : <span class="hljs-function"><span class="hljs-params">(args)</span>-&gt;</span>
+    <span class="hljs-keyword">super</span>()
+    <span class="hljs-property">@models</span> = args.models
+    <span class="hljs-property">@route</span>  = args.route
+    <span class="hljs-property">@url</span>    = <span class="hljs-string">"<span class="hljs-subst">#{args.origin}</span><span class="hljs-subst">#{<span class="hljs-property">@route</span>.path()}</span>"</span>
+    <span class="hljs-property">@_user</span>  = args.user</pre></div></div>
             
         </li>
         
@@ -263,7 +263,7 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="hasuser">hasUser</h2>
+              <h2 id="setdata">setData</h2>
 
             </div>
             
@@ -276,12 +276,12 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Returns true if user is not null</p>
+              <p>Set the data for this page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  hasUser : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    !!<span class="hljs-property">@user</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  setData : <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
+    <span class="hljs-property">@page_data</span> = data</pre></div></div>
             
         </li>
         
@@ -292,7 +292,7 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="canload">canLoad</h2>
+              <h2 id="hasuser">hasUser</h2>
 
             </div>
             
@@ -305,14 +305,12 @@ If function will be called and should return an object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Returns true if this page is currently able to load.
-The common case where this is false is when the page 
-requires a user but does not have one </p>
+              <p>Returns true if user is not null</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  canLoad : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-keyword">not</span> (<span class="hljs-property">@requires_user</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">not</span> <span class="hljs-property">@hasUser</span>()))</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  hasUser : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    !!<span class="hljs-property">@_user</span></pre></div></div>
             
         </li>
         
@@ -323,7 +321,7 @@ requires a user but does not have one </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h2 id="html-">html </h2>
+              <h2 id="needsuser">needsUser</h2>
 
             </div>
             
@@ -336,15 +334,13 @@ requires a user but does not have one </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Conditionally renders either template or loadingTemplate</p>
+              <p>Returns true if this page needs a user and so can
+not render until the user is there</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  html : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@canLoad</span>()
-      <span class="hljs-keyword">super</span>()
-    <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@loadingTemplate</span>()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  needsUser : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    (<span class="hljs-property">@requires_user</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">not</span> <span class="hljs-property">@hasUser</span>()))</pre></div></div>
             
         </li>
         
@@ -411,7 +407,12 @@ returns underlying @meta object</p>
       <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">of</span> metadata
         <span class="hljs-property">@meta</span>[k] = v
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@meta</span></pre></div></div>
+      <span class="hljs-property">@meta</span>
+
+  setBodyToLoadingView : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    LoadingView = <span class="hljs-property">@loading_view</span>
+    loading_view = <span class="hljs-keyword">new</span> LoadingView()
+    <span class="hljs-property">@setBody</span>(loading_view)</pre></div></div>
             
         </li>
         
@@ -518,7 +519,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h2 id="swapbody-">swapBody </h2>
+              <h2 id="buildandsetbody">buildAndSetBody</h2>
 
             </div>
             
@@ -531,15 +532,12 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Change the body of this page to a different view</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  swapBody : <span class="hljs-function"><span class="hljs-params">(new_body)</span>-&gt;</span>
-    $body = <span class="hljs-property">@_body</span>.$node()
-    <span class="hljs-property">@setBody</span>(new_body)
-    $body.replaceWith(new_body.html())
-    new_body.run()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  buildAndSetBody : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    body = <span class="hljs-property">@build</span>()
+    <span class="hljs-property">@setBody</span>(body)</pre></div></div>
             
         </li>
         
@@ -550,7 +548,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h2 id="remove">remove</h2>
+              <h2 id="swapbody-">swapBody </h2>
 
             </div>
             
@@ -563,18 +561,16 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Remove the page and all its views</p>
+              <p>Change the body of this page to a different view</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  remove : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-property">@_body</span>.removeAllSubviews()
-    <span class="hljs-property">@removeSubview</span>(<span class="hljs-property">@_body</span>)
-    <span class="hljs-property">@_body</span>     = <span class="hljs-literal">null</span>
-    <span class="hljs-property">@store</span>     = <span class="hljs-literal">null</span>
-    <span class="hljs-property">@route</span>     = <span class="hljs-literal">null</span>
-    <span class="hljs-property">@url</span>       = <span class="hljs-literal">null</span>
-    <span class="hljs-property">@container</span> = <span class="hljs-literal">null</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  swapBody : <span class="hljs-function"><span class="hljs-params">(new_body)</span>-&gt;</span>
+    $body = <span class="hljs-property">@_body</span>.$node()
+    html  = new_body.html()
+    $body.replaceWith(html)
+    <span class="hljs-property">@setBody</span>(new_body)
+    new_body.run()</pre></div></div>
             
         </li>
         
@@ -585,7 +581,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <h2 id="-tododododo-"><em>TODODODODO</em></h2>
+              <h2 id="replaceloadingbody">replaceLoadingBody</h2>
 
             </div>
             
@@ -601,8 +597,11 @@ object</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>  showModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-  hideModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  replaceLoadingWithBuild : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    $body = <span class="hljs-property">@_body</span>.$node()
+    <span class="hljs-property">@buildAndSetBody</span>()
+    html = <span class="hljs-property">@_body</span>.html()
+    $body.replaceWith(html)</pre></div></div>
             
         </li>
         
@@ -613,7 +612,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
+              <h2 id="remove">remove</h2>
 
             </div>
             
@@ -626,9 +625,16 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>These methods should/may be implemented by child classes </p>
+              <p>Remove the page and all its views</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  remove : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@_body</span>.removeAllSubviews()
+    <span class="hljs-property">@removeSubview</span>(<span class="hljs-property">@_body</span>)
+    <span class="hljs-property">@_body</span>     = <span class="hljs-literal">null</span>
+    <span class="hljs-property">@route</span>     = <span class="hljs-literal">null</span>
+    <span class="hljs-property">@url</span>       = <span class="hljs-literal">null</span></pre></div></div>
             
         </li>
         
@@ -639,7 +645,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2 id="load">load</h2>
+              <h2 id="-tododododo-"><em>TODODODODO</em></h2>
 
             </div>
             
@@ -652,12 +658,11 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>Child classes should override this to load the data from 
-the @store. After retrieving the data they should</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  load : <span class="hljs-function"><span class="hljs-params">(callback)</span>-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  showModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+  hideModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -668,11 +673,9 @@ the @store. After retrieving the data they should</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>@store.get(…)</p>
+              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    callback(<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>)</pre></div></div>
             
         </li>
         
@@ -683,7 +686,7 @@ the @store. After retrieving the data they should</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <h2 id="build">build</h2>
+              <p>These methods should/may be implemented by child classes </p>
 
             </div>
             
@@ -696,12 +699,9 @@ the @store. After retrieving the data they should</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Child classes should override this to construct and add the
-views for the page</p>
+              <h2 id="load">load</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -712,9 +712,14 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <h2 id="template">template</h2>
+              <p>Child classes should override this to load the data
+from models. After retrieving the data they should
+call callback with (error, data)</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  load : <span class="hljs-function"><span class="hljs-params">(callback)</span>-&gt;</span>
+    callback(<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>)</pre></div></div>
             
         </li>
         
@@ -724,6 +729,48 @@ views for the page</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h2 id="build">build</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Child classes should override this to construct and add the
+views for the page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="template">template</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Child classes should override this method to provide 
 any wrapper html needed around this page’s body view</p>
@@ -739,46 +786,11 @@ any wrapper html needed around this page’s body view</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <h2 id="loadingtemplate">loadingTemplate</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>Called when this page is going to be loaded</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  loadingTemplate : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-string">"""
-    &lt;div class="loading"&gt;
-      &lt;div class="loading_message"&gt;
-        Loading...
-      &lt;/div&gt;
-    &lt;/div&gt;
-    """</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <h2 id="headers">headers</h2>
 
@@ -787,11 +799,11 @@ any wrapper html needed around this page’s body view</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>Child classes can optionally override to specify or set
 any HTTP headers specific to this view</p>
@@ -804,11 +816,11 @@ any HTTP headers specific to this view</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <h2 id="head">head</h2>
 
@@ -817,11 +829,11 @@ any HTTP headers specific to this view</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Child classes may override this to provide a string
 of html that will be inserted into the page’s <head> section</p>
@@ -831,7 +843,7 @@ of html that will be inserted into the page’s <head> section</p>
             <div class="content"><div class='highlight'><pre>  head : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
     <span class="hljs-string">''</span>
 
-<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = Page</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = Page</pre></div></div>
             
         </li>
         

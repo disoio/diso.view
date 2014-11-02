@@ -24,28 +24,38 @@
 
     CollectionView.prototype.item_is_view = false;
 
-    function CollectionView() {
-      var collection_name;
-      CollectionView.__super__.constructor.apply(this, arguments);
-      collection_name = this._collectionName();
-      if ('collection' in this.data) {
-        this[collection_name] = this.data.collection;
-      } else if (this.collection_name && (this.collection_name in this.data)) {
-        this[collection_name] = this.data[this.collection_name];
+    function CollectionView(args) {
+      var collection, collection_in_args, collection_name;
+      if (args.data == null) {
+        args.data = {};
       }
-      if (!this.collection) {
-        throwError("Missing collection");
+      collection = null;
+      collection_in_args = 'collection' in args;
+      if (collection_in_args) {
+        collection = args.collection;
+        delete args.collection;
+      } else if (this.collection_name && (this.collection_name in args.data)) {
+        if (collection_in_args) {
+          throwError("Can't pass collection arg and named collection in data");
+        }
+        collection = args.data[this.collection_name];
+      }
+      if (!collection) {
+        throwError("Missing collection in " + this.constructor.name);
       }
       if (!this.item) {
         throwError("Missing item template or view");
       }
+      CollectionView.__super__.constructor.call(this, args);
+      collection_name = this._collectionName();
+      this[collection_name] = collection;
       this._setupItemViews();
     }
 
     CollectionView.prototype.addModel = function(model) {
       var i, index, len, other_model, _i, _ref;
       if (!Type(model.isEqual, Function)) {
-        throwError("collection model missing isEqual method");
+        throwError("Collection model missing isEqual method");
       }
       index = null;
       len = this.collection.length;
@@ -83,7 +93,7 @@
     };
 
     CollectionView.prototype.template = function() {
-      var element, html, id, subview, _i, _len, _ref, _ref1;
+      var html, id, item, subview, _i, _len, _ref, _ref1;
       html = '';
       if (this.item_is_view) {
         _ref = this.subviews();
@@ -94,29 +104,32 @@
       } else {
         _ref1 = this.collection;
         for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          element = _ref1[_i];
-          html += this.item(element);
+          item = _ref1[_i];
+          html += this.item(item);
         }
       }
       return this.wrapper(html);
     };
 
     CollectionView.prototype._setupItemViews = function() {
-      var ItemView, element, item_data, k, v, view, _i, _len, _ref, _results;
+      var ItemView, item, item_data, k, v, view, _i, _len, _ref, _results;
       if (Type.extension(this.item, View)) {
         this.item_is_view = true;
         ItemView = this.item;
         _ref = this.collection;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          element = _ref[_i];
-          item_data = this.itemData();
+          item = _ref[_i];
+          item_data = {
+            user: this.user,
+            data: this.itemData()
+          };
           if (Type.extension(ItemView, ModelView)) {
-            item_data.model = element;
+            item_data.model = item;
           } else {
-            for (k in element) {
-              v = element[k];
-              item_data[k] = v;
+            for (k in item) {
+              v = item[k];
+              item_data.data[k] = v;
             }
           }
           view = new ItemView(item_data);

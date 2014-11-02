@@ -53,20 +53,23 @@ class CollectionView extends View
   # B. a template that will called on each model in the 
   #    collection and should return a string of html
 
-  constructor : ()->
-    super #sets @data to data passed to constructor
+  constructor : (args)->
+    args.data ?= {}
 
-    collection_name = @_collectionName()
+    collection = null
 
-    if ('collection' of @data)
-      # pass collection via constructor 'collection' opt 
-      # this also works if there is a custom @collection_name, in 
-      # which case it takes precedence of a @model_name opt
-      @[collection_name] = @data.collection
+    collection_in_args = ('collection' of args)
 
-    else if (@collection_name and (@collection_name of @data))
+    if collection_in_args
+      collection = args.collection
+      delete args.collection
+
+    else if (@collection_name and (@collection_name of args.data))
+      if collection_in_args
+        throwError("Can't pass collection arg and named collection in data")
+
       # when custom collection name has been set in child class
-      @[collection_name] = @data[@collection_name]
+      collection = args.data[@collection_name]
     
     # its also possible that the 'collection' accessor property defined 
     # below can be overriden in child class in which case @collection
@@ -74,12 +77,15 @@ class CollectionView extends View
     # either way @collection should at this point return something 
     # either set above or in the child class. otherwise throw error
 
-    unless @collection
-      throwError("Missing collection")
+    unless collection
+      throwError("Missing collection in #{@constructor.name}")
 
     unless @item 
       throwError("Missing item template or view")
     
+    super(args)
+    collection_name = @_collectionName()
+    @[collection_name] = collection
     @_setupItemViews()
 
   # addModel
@@ -87,7 +93,7 @@ class CollectionView extends View
   # Add a model to this collection
   addModel : (model)->
     unless Type(model.isEqual, Function)
-      throwError("collection model missing isEqual method")
+      throwError("Collection model missing isEqual method")
     
     index = null
     len = @collection.length
@@ -152,8 +158,8 @@ class CollectionView extends View
       for id, subview of @subviews()
         html += subview.html()
     else
-      for element in @collection
-        html += @item(element)
+      for item in @collection
+        html += @item(item)
 
     @wrapper(html)
 
@@ -166,14 +172,17 @@ class CollectionView extends View
       @item_is_view = true
 
       ItemView = @item
-      for element in @collection
-        item_data = @itemData()
-
+      for item in @collection
+        item_data = {
+          user : @user
+          data : @itemData()
+        }
+        
         if Type.extension(ItemView, ModelView)
-          item_data.model = element
+          item_data.model = item
         else
-          for k,v of element
-            item_data[k] = v
+          for k,v of item
+            item_data.data[k] = v
 
         view = new ItemView(item_data)
         @addSubview(view)

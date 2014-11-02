@@ -3,6 +3,12 @@
 # [View](./View.html)  
 View = require('./View')
 
+# throwError
+# ----------
+# Convenience method for throwing errors in this class
+throwError = (msg)->
+  throw new Error("diso.view.Model: #{msg}")
+
 # ModelView
 # =========
 # A view subclass that is used for rendering models
@@ -27,24 +33,28 @@ class ModelView extends View
   # ### required args
   # When the constructor runs it must have one of the 
   # following conditions met
-  # A. 'model' in its data arg
-  # B. model_name in its data arg if that has been set
+  # A. 'model' arg
+  # B. <model_name> in its data arg if that has been set
   #    in the child class
   # C. model attribute set statically in child class' body
-  constructor : ()->
-    super #sets @data to data passed to constructor
+  constructor : (args)->
+    unless args.data
+      args.data = {}
 
-    model_name = @_modelName()
+    model = null
 
-    if ('model' of @data)
-      # pass model via constructor 'model' opt (also works
-      # if there is a custom @model_name, in which case
-      # it takes precedence of a @model_name opt
-      @[model_name] = @data.model
+    model_in_args = ('model' of args)
 
-    else if (@model_name and (@model_name of @data))
+    if model_in_args
+      model = args.model
+      delete args.model
+
+    if (@model_name and (@model_name of args.data))
+      if model_in_args
+        throwError("Can't pass model arg and named model in data")
+      
       # when custom model name has been set in child class
-      @[model_name] = @data[@model_name]
+      model = args.data[@model_name]
     
     # its also possible that the 'model' accessor property defined 
     # below can be overriden in child class in which case @model 
@@ -52,8 +62,12 @@ class ModelView extends View
     # either way @model should at this point return something 
     # either set above or in the child class. otherwise throw error
 
-    unless @model
-      throw new Error("diso.view.Model: Missing model: #{@constructor.name}")
+    unless model
+      throwError("Missing model in #{@constructor.name}")
+
+    super(args)
+    model_name = @_modelName()
+    @[model_name] = model
 
 # We need to access the model indirectly so as to support
 # the different ways of specifying it in constructor / child class

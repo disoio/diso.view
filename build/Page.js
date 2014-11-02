@@ -1,5 +1,5 @@
 (function() {
-  var $, Page, Type, View,
+  var $, LoadingView, Page, Type, View,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -8,6 +8,23 @@
   Type = require('type-of-is');
 
   View = require('./View');
+
+  LoadingView = (function(_super) {
+    __extends(LoadingView, _super);
+
+    function LoadingView() {
+      return LoadingView.__super__.constructor.apply(this, arguments);
+    }
+
+    LoadingView.prototype.id = 'loading';
+
+    LoadingView.prototype.template = function() {
+      return "<div>\n  <div class=\"loading_message\">\n    Loading...\n  </div>\n</div>";
+    };
+
+    return LoadingView;
+
+  })(View);
 
   Page = (function(_super) {
     __extends(Page, _super);
@@ -33,33 +50,28 @@
 
     Page.prototype.requires_user = false;
 
+    Page.prototype.loading_view = LoadingView;
+
+    Page.prototype.is_page = true;
+
     function Page(args) {
-      Page.__super__.constructor.call(this, args.data || {});
+      Page.__super__.constructor.call(this);
       this.models = args.models;
       this.route = args.route;
       this.url = "" + args.origin + (this.route.path());
-      this.container = args.container;
-      this.user = args.user;
+      this._user = args.user;
     }
 
     Page.prototype.setData = function(data) {
-      return this.data = data;
+      return this.page_data = data;
     };
 
     Page.prototype.hasUser = function() {
-      return !!this.user;
+      return !!this._user;
     };
 
-    Page.prototype.canLoad = function() {
-      return !(this.requires_user && (!this.hasUser()));
-    };
-
-    Page.prototype.html = function() {
-      if (this.canLoad()) {
-        return Page.__super__.html.call(this);
-      } else {
-        return this.loadingTemplate();
-      }
+    Page.prototype.needsUser = function() {
+      return this.requires_user && (!this.hasUser());
     };
 
     Page.prototype.key = function() {
@@ -81,6 +93,13 @@
       } else {
         return this.meta;
       }
+    };
+
+    Page.prototype.setBodyToLoadingView = function() {
+      var loading_view;
+      LoadingView = this.loading_view;
+      loading_view = new LoadingView();
+      return this.setBody(loading_view);
     };
 
     Page.prototype.getMeta = function() {
@@ -105,22 +124,35 @@
       return this.addSubview(this._body);
     };
 
+    Page.prototype.buildAndSetBody = function() {
+      var body;
+      body = this.build();
+      return this.setBody(body);
+    };
+
     Page.prototype.swapBody = function(new_body) {
-      var $body;
+      var $body, html;
       $body = this._body.$node();
+      html = new_body.html();
+      $body.replaceWith(html);
       this.setBody(new_body);
-      $body.replaceWith(new_body.html());
       return new_body.run();
+    };
+
+    Page.prototype.replaceLoadingWithBuild = function() {
+      var $body, html;
+      $body = this._body.$node();
+      this.buildAndSetBody();
+      html = this._body.html();
+      return $body.replaceWith(html);
     };
 
     Page.prototype.remove = function() {
       this._body.removeAllSubviews();
       this.removeSubview(this._body);
       this._body = null;
-      this.store = null;
       this.route = null;
-      this.url = null;
-      return this.container = null;
+      return this.url = null;
     };
 
     Page.prototype.showModal = function() {};
@@ -139,10 +171,6 @@
       } else {
         return '';
       }
-    };
-
-    Page.prototype.loadingTemplate = function() {
-      return "<div class=\"loading\">\n  <div class=\"loading_message\">\n    Loading...\n  </div>\n</div>";
     };
 
     Page.prototype.headers = function() {

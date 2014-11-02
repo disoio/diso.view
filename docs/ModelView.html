@@ -91,7 +91,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h1 id="modelview">ModelView</h1>
+              <h2 id="throwerror">throwError</h2>
 
             </div>
             
@@ -104,11 +104,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>A view subclass that is used for rendering models</p>
+              <p>Convenience method for throwing errors in this class</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ModelView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">View</span></span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">throwError</span> = <span class="hljs-params">(msg)</span>-&gt;</span>
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Model: <span class="hljs-subst">#{msg}</span>"</span>)</pre></div></div>
             
         </li>
         
@@ -118,6 +119,34 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h1 id="modelview">ModelView</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>A view subclass that is used for rendering models</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ModelView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">View</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>model_name can be overridden to make data access
 more readable
@@ -131,42 +160,13 @@ TODO: should probably just reflect on the model
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h2 id="_modelname">_modelName</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>return the model name for this view’s model</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  _modelName : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-property">@model_name</span> || <span class="hljs-string">'_model'</span></pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h2 id="constructor">constructor</h2>
+              <h2 id="_modelname">_modelName</h2>
 
             </div>
             
@@ -179,23 +179,12 @@ TODO: should probably just reflect on the model
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Create a ModelView </p>
-<h3 id="required-args">required args</h3>
-<p>When the constructor runs it must have one of the 
-following conditions met
-A. ‘model’ in its data arg
-B. model_name in its data arg if that has been set
-   in the child class
-C. model attribute set statically in child class’ body</p>
+              <p>return the model name for this view’s model</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  constructor : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-keyword">super</span> <span class="hljs-comment">#sets @data to data passed to constructor</span>
-
-    model_name = <span class="hljs-property">@_modelName</span>()
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'model'</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _modelName : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@model_name</span> || <span class="hljs-string">'_model'</span></pre></div></div>
             
         </li>
         
@@ -206,15 +195,9 @@ C. model attribute set statically in child class’ body</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>pass model via constructor ‘model’ opt (also works
-if there is a custom @model_name, in which case
-it takes precedence of a @model_name opt</p>
+              <h2 id="constructor">constructor</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>      @[model_name] = <span class="hljs-property">@data</span>.model
-
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-property">@model_name</span> <span class="hljs-keyword">and</span> (<span class="hljs-property">@model_name</span> <span class="hljs-keyword">of</span> <span class="hljs-property">@data</span>))</pre></div></div>
             
         </li>
         
@@ -225,11 +208,32 @@ it takes precedence of a @model_name opt</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>when custom model name has been set in child class</p>
+              <p>Create a ModelView </p>
+<h3 id="required-args">required args</h3>
+<p>When the constructor runs it must have one of the 
+following conditions met
+A. ‘model’ arg
+B. <model_name> in its data arg if that has been set
+   in the child class
+C. model attribute set statically in child class’ body</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      @[model_name] = <span class="hljs-property">@data</span>[<span class="hljs-property">@model_name</span>]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  constructor : <span class="hljs-function"><span class="hljs-params">(args)</span>-&gt;</span>
+    <span class="hljs-keyword">unless</span> args.data
+      args.data = {}
+
+    model = <span class="hljs-literal">null</span>
+
+    model_in_args = (<span class="hljs-string">'model'</span> <span class="hljs-keyword">of</span> args)
+
+    <span class="hljs-keyword">if</span> model_in_args
+      model = args.model
+      <span class="hljs-keyword">delete</span> args.model
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-property">@model_name</span> <span class="hljs-keyword">and</span> (<span class="hljs-property">@model_name</span> <span class="hljs-keyword">of</span> args.data))
+      <span class="hljs-keyword">if</span> model_in_args
+        throwError(<span class="hljs-string">"Can't pass model arg and named model in data"</span>)</pre></div></div>
             
         </li>
         
@@ -240,17 +244,11 @@ it takes precedence of a @model_name opt</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>its also possible that the ‘model’ accessor property defined 
-below can be overriden in child class in which case @model 
-will be the actual model rather than property lookup 
-either way @model should at this point return something 
-either set above or in the child class. otherwise throw error</p>
+              <p>when custom model name has been set in child class</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    <span class="hljs-keyword">unless</span> <span class="hljs-property">@model</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Model: Missing model: <span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span>"</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      model = args.data[<span class="hljs-property">@model_name</span>]</pre></div></div>
             
         </li>
         
@@ -260,6 +258,31 @@ either set above or in the child class. otherwise throw error</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>its also possible that the ‘model’ accessor property defined 
+below can be overriden in child class in which case @model 
+will be the actual model rather than property lookup 
+either way @model should at this point return something 
+either set above or in the child class. otherwise throw error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">unless</span> model
+      throwError(<span class="hljs-string">"Missing model in <span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span>"</span>)
+
+    <span class="hljs-keyword">super</span>(args)
+    model_name = <span class="hljs-property">@_modelName</span>()
+    @[model_name] = model</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>We need to access the model indirectly so as to support
 the different ways of specifying it in constructor / child class</p>
@@ -275,7 +298,7 @@ the different ways of specifying it in constructor / child class</p>
 })
 
     
-<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = ModelView</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = ModelView</pre></div></div>
             
         </li>
         

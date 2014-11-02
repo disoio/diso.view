@@ -28,10 +28,16 @@
 
     View.prototype._page = null;
 
-    function View(data) {
-      this.data = data;
-      if (this.data == null) {
-        this.data = {};
+    View.prototype.is_page = false;
+
+    function View(args) {
+      if (!args) {
+        args = {};
+      }
+      this.data = args.data || {};
+      this._user = args.user;
+      if ('id' in args) {
+        this.id = args.id;
       }
       if (!this.id) {
         this.id = ShortId.generate();
@@ -87,21 +93,16 @@
         while (view.parent) {
           view = view.parent;
         }
-        this._page = view;
+        if (view.is_page) {
+          this._page = view;
+        }
       }
       return this._page;
     };
 
-    View.prototype.goto = function(args) {
-      return this.page().container.goto(args);
-    };
-
-    View.prototype.user = function() {
-      return this.page().user;
-    };
-
     View.prototype.setId = function(id) {
-      return this.id = id;
+      this.id = id;
+      return this._$node = null;
     };
 
     View.prototype.$node = function() {
@@ -148,7 +149,6 @@
         subview.parent = null;
         subview._$node = null;
         subview._page = null;
-        subview.data = null;
         return subview._removeBehaviors();
       }
     };
@@ -256,6 +256,15 @@
     return View;
 
   })();
+
+  Object.defineProperty(View.prototype, 'user', {
+    get: function() {
+      return this._user;
+    },
+    set: function(user) {
+      return this._user = user;
+    }
+  });
 
   module.exports = View;
 

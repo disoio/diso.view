@@ -20,7 +20,6 @@ BEHAVIOR_ATTR      = 'data-behavior'
 BEHAVIOR_DELIMITER = ','
 BEHAVIOR_SEPARATOR = ':'
 
-
 # View
 # ====
 # This is the base class used in the view hierarchy. It is 
@@ -37,15 +36,27 @@ class View
   # memoized reference to this view's page
   _page : null
 
+  is_page : false
+
   # constructor
   # -----------
   # Create the view and generate an id if neccessary
   #
-  # ### optional args
   # **data** : data used to render this view
-  constructor : (@data)->
-    @data ?= {}
-    
+  # 
+  # **user** : the user
+  # 
+  # *id* : set the id for this view
+  constructor : (args)->
+    unless args
+      args = {}
+
+    @data  = args.data || {}
+    @_user = args.user
+
+    if ('id' of args)
+      @id = args.id
+
     unless @id
       @id = ShortId.generate()
 
@@ -121,29 +132,18 @@ class View
       while view.parent
         view = view.parent
 
-      @_page = view
+      if view.is_page
+        @_page = view
 
     @_page
-
-  # goto
-  # ----
-  # Convenience method so views event handlers can 
-  # easily trigger page transitions
-  goto : (args)->
-    @page().container.goto(args)
-
-  # user
-  # ----
-  # Get the current user from this view's page
-  user : ()->
-    @page().user
 
   # setNode
   # -------
   # Overwrite the id of this view and update the 
   # associated dom node that contains it
   setId : (id)->
-    @id = id
+    @id     = id
+    @_$node = null
 
   $node : ()->
     unless @_$node
@@ -193,7 +193,6 @@ class View
       subview.parent = null
       subview._$node = null
       subview._page  = null
-      subview.data   = null
       subview._removeBehaviors()
   
   # removeSubviews
@@ -322,5 +321,14 @@ class View
   # Namespaces events with this view's  
   _namespaceEvent : (event_name)->
     "#{event_name}.#{@id}"
+
+Object.defineProperty(View.prototype, 'user', {
+  get: ()->
+    @_user
+
+  set: (user)->
+    @_user = user
+})
       
 module.exports = View
+

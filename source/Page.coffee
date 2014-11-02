@@ -10,13 +10,29 @@ Type = require('type-of-is')
 # [View](./View.html)  
 View = require('./View')
 
+# LoadingView
+# ===========
+# Placeholder loading view. Pages can overide this with 
+# via 'loading_view' attribute on child class of Page
+class LoadingView extends View
+  id : 'loading'
+
+  template : ()->
+    """
+    <div>
+      <div class="loading_message">
+        Loading...
+      </div>
+    </div>
+    """
+
 # Page
 # ====
 # A page is a view that is at the root of a view hierarchy
 # and it is responsible for loading the data needed to render
 # it's child views, adding them as subviews as providing them 
 # process through which to subscribe to and fetch data from 
-# a datastore
+# models
 class Page extends View
   scripts  : []
   styles   : []
@@ -36,71 +52,50 @@ class Page extends View
 
   requires_user : false
 
+  loading_view : LoadingView
+
+  is_page : true
+
   # constructor
   # -----------
   # Create a page
   #
   # ### required args
-  # **store**  : the store for this page
+  #
+  # **models** : models used by this page
   #
   # **route**  : the route for this page
   #
   # **origin** : the origin where this page is served from 
   #             i.e. https://blah.example.com
   #
-  # ### optional args
-  # **container** : the container for this page. this isn't
-  #                 used on the server, but should be present
-  #                 in the client in order to provide access 
-  #                 to goto and other container methods
-  #
-  # **data**      : In general, the page will be fetching its 
-  #                 own data via its store. The one exception
-  #                 is when the data is already available (for
-  #                 example, during the initialize process in 
-  #                 diso.core the data was available during the
-  #                 serverside render and so can be sent along
-  #                 with the view id_map and so is set via this
-  #                 constructor arg)
-  #
-  # **user**      : Object representing current user
+  # **user** : Object representing current user
   # 
   constructor : (args)->
-    super(args.data || {})
-    @models    = args.models
-    @route     = args.route
-    @url       = "#{args.origin}#{@route.path()}"
-    @container = args.container
-    @user      = args.user
+    super()
+    @models = args.models
+    @route  = args.route
+    @url    = "#{args.origin}#{@route.path()}"
+    @_user  = args.user
 
   # setData
   # -------
   # Set the data for this page.
   setData : (data)->
-    @data = data
+    @page_data = data
 
   # hasUser
   # -------
   # Returns true if user is not null
   hasUser : ()->
-    !!@user
+    !!@_user
 
-  # canLoad
-  # -------
-  # Returns true if this page is currently able to load.
-  # The common case where this is false is when the page 
-  # requires a user but does not have one 
-  canLoad : ()->
-    not (@requires_user and (not @hasUser()))
-
-  # html 
-  # ----
-  # Conditionally renders either template or loadingTemplate
-  html : ()->
-    if @canLoad()
-      super()
-    else
-      @loadingTemplate()
+  # needsUser
+  # ---------
+  # Returns true if this page needs a user and so can
+  # not render until the user is there
+  needsUser : ()->
+    (@requires_user and (not @hasUser()))
 
   # key
   # ---
@@ -122,6 +117,11 @@ class Page extends View
         @meta[k] = v
     else
       @meta
+
+  setBodyToLoadingView : ()->
+    LoadingView = @loading_view
+    loading_view = new LoadingView()
+    @setBody(loading_view)
 
   # getMeta
   # -------
@@ -149,15 +149,30 @@ class Page extends View
       @removeSubview(@_body)
     @_body = new_body
     @addSubview(@_body)
+
+  # buildAndSetBody
+  # ---------------
+  buildAndSetBody : ()->
+    body = @build()
+    @setBody(body)
   
   # swapBody 
   # --------
   # Change the body of this page to a different view
   swapBody : (new_body)->
     $body = @_body.$node()
+    html  = new_body.html()
+    $body.replaceWith(html)
     @setBody(new_body)
-    $body.replaceWith(new_body.html())
     new_body.run()
+
+  # replaceLoadingBody
+  # ------------------
+  replaceLoadingWithBuild : ()->
+    $body = @_body.$node()
+    @buildAndSetBody()
+    html = @_body.html()
+    $body.replaceWith(html)
 
   # remove
   # ------
@@ -166,10 +181,8 @@ class Page extends View
     @_body.removeAllSubviews()
     @removeSubview(@_body)
     @_body     = null
-    @store     = null
     @route     = null
     @url       = null
-    @container = null
 
   # *TODODODODO*
   # ------------
@@ -182,10 +195,10 @@ class Page extends View
 
   # load
   # ----
-  # Child classes should override this to load the data from 
-  # the @store. After retrieving the data they should
+  # Child classes should override this to load the data
+  # from models. After retrieving the data they should
+  # call callback with (error, data)
   load : (callback)->
-    # @store.get(...)
     callback(null, null)
   
   # build
@@ -203,18 +216,6 @@ class Page extends View
       @_body.html()
     else
       ''
-
-  # loadingTemplate
-  # ---------------
-  # Called when this page is going to be loaded
-  loadingTemplate : ()->
-    """
-    <div class="loading">
-      <div class="loading_message">
-        Loading...
-      </div>
-    </div>
-    """
 
   # headers
   # -------
