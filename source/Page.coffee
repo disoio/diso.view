@@ -111,7 +111,7 @@ class Page extends View
   setMeta : (metadata)->
     if metadata
       unless Type(metadata, Object)
-        throw new Error("Argument to meta should be object")
+        throw new Error("diso.view.Page: Argument to meta should be object")
       
       for k,v of metadata
         @meta[k] = v
@@ -154,7 +154,10 @@ class Page extends View
   # ---------------
   buildAndSetBody : ()->
     body = @build()
-    @setBody(body)
+    if body
+      unless Type.instance(body, View)
+        throw new Error("diso.view.Page: build should return View for body")
+      @setBody(body)
   
   # swapBody 
   # --------
@@ -206,6 +209,7 @@ class Page extends View
   # Child classes should override this to construct and add the
   # views for the page
   build : ()->
+    null
 
   # template
   # --------

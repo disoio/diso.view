@@ -82,7 +82,7 @@
       var k, v, _results;
       if (metadata) {
         if (!Type(metadata, Object)) {
-          throw new Error("Argument to meta should be object");
+          throw new Error("diso.view.Page: Argument to meta should be object");
         }
         _results = [];
         for (k in metadata) {
@@ -127,7 +127,12 @@
     Page.prototype.buildAndSetBody = function() {
       var body;
       body = this.build();
-      return this.setBody(body);
+      if (body) {
+        if (!Type.instance(body, View)) {
+          throw new Error("diso.view.Page: build should return View for body");
+        }
+        return this.setBody(body);
+      }
     };
 
     Page.prototype.swapBody = function(new_body) {
@@ -163,7 +168,9 @@
       return callback(null, null);
     };
 
-    Page.prototype.build = function() {};
+    Page.prototype.build = function() {
+      return null;
+    };
 
     Page.prototype.template = function() {
       if (this._body) {

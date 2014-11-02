@@ -402,7 +402,7 @@ returns underlying @meta object</p>
             <div class="content"><div class='highlight'><pre>  setMeta : <span class="hljs-function"><span class="hljs-params">(metadata)</span>-&gt;</span>
     <span class="hljs-keyword">if</span> metadata
       <span class="hljs-keyword">unless</span> Type(metadata, Object)
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"Argument to meta should be object"</span>)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Page: Argument to meta should be object"</span>)
       
       <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">of</span> metadata
         <span class="hljs-property">@meta</span>[k] = v
@@ -537,7 +537,10 @@ object</p>
             
             <div class="content"><div class='highlight'><pre>  buildAndSetBody : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
     body = <span class="hljs-property">@build</span>()
-    <span class="hljs-property">@setBody</span>(body)</pre></div></div>
+    <span class="hljs-keyword">if</span> body
+      <span class="hljs-keyword">unless</span> Type.instance(body, View)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Page: build should return View for body"</span>)
+      <span class="hljs-property">@setBody</span>(body)</pre></div></div>
             
         </li>
         
@@ -748,7 +751,8 @@ views for the page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-literal">null</span></pre></div></div>
             
         </li>
         
