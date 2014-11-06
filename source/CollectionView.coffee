@@ -112,11 +112,11 @@ class CollectionView extends View
   # refresh
   # -------
   # refresh / rerender this view
-  # TODO: if removing subviews, shouldn't rerun be necc.? 
-  refresh : (rerun = true)->
+  # TODO: if removing subviews, shouldn't resetup be necc.? 
+  refresh : (resetup = true)->
     @removeAllSubviews()
     @_setupItemViews()
-    super(rerun)
+    super(resetup)
 
   # *STUB METHODS*
   # --------------

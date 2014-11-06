@@ -75,13 +75,13 @@
       }
     };
 
-    CollectionView.prototype.refresh = function(rerun) {
-      if (rerun == null) {
-        rerun = true;
+    CollectionView.prototype.refresh = function(resetup) {
+      if (resetup == null) {
+        resetup = true;
       }
       this.removeAllSubviews();
       this._setupItemViews();
-      return CollectionView.__super__.refresh.call(this, rerun);
+      return CollectionView.__super__.refresh.call(this, resetup);
     };
 
     CollectionView.prototype.wrapper = function(contents) {

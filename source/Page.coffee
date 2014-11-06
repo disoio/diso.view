@@ -167,7 +167,7 @@ class Page extends View
     html  = new_body.html()
     $body.replaceWith(html)
     @setBody(new_body)
-    new_body.run()
+    new_body.setup()
 
   # replaceLoadingBody
   # ------------------

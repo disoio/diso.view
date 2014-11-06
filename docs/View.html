@@ -309,18 +309,18 @@ keyed by their id </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Refresh this views content and optionally rerun it</p>
+              <p>Refresh this views content and optionally resetup it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(rerun = <span class="hljs-literal">true</span>)</span>-&gt;</span>
+            <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(resetup = <span class="hljs-literal">true</span>)</span>-&gt;</span>
     <span class="hljs-property">@removing</span>()
     <span class="hljs-property">@_removeBehaviors</span>()
     html = <span class="hljs-property">@html</span>()
     <span class="hljs-property">@$node</span>().replaceWith(html)
     <span class="hljs-property">@_$node</span> = <span class="hljs-literal">null</span>
-    <span class="hljs-keyword">if</span> rerun
-      <span class="hljs-property">@run</span>()</pre></div></div>
+    <span class="hljs-keyword">if</span> resetup
+      <span class="hljs-property">@setup</span>()</pre></div></div>
             
         </li>
         
@@ -350,7 +350,7 @@ tag. The value should be an event name and a event handler
 name separated by a colon e.g. “click:omgClickHappen”.</p>
 <p>The event should be a valid jQuery event and the view should
 have a method matching the handler name. </p>
-<p>When the view is run in the client, the named event handler 
+<p>When the view is setup in the client, the named event handler 
 will be bound to the event. When the event is triggered on 
 the element containing this behavior attribute, the handler
 will be run. </p>
@@ -374,7 +374,7 @@ will be run. </p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2 id="run">run</h2>
+              <h2 id="setup">setup</h2>
 
             </div>
             
@@ -389,17 +389,17 @@ will be run. </p>
               </div>
               <p>This gets called by the client in order to initialize the 
 behavior (i.e. event) handling in this view and its subviews</p>
-<p>Prior to adding behaviors, it calls setup, which can be 
+<p>Prior to adding behaviors, it calls run, which can be 
 overridden in child classes to perform custom logic in the 
 client beforehand i.e. for event setup, subscription etc. </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  run : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-property">@setup</span>()
+            <div class="content"><div class='highlight'><pre>  setup : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@run</span>()
     <span class="hljs-property">@_addBehaviors</span>()
     <span class="hljs-keyword">for</span> id, subview <span class="hljs-keyword">of</span> <span class="hljs-property">@_subviews</span>
-      subview.run()</pre></div></div>
+      subview.setup()</pre></div></div>
             
         </li>
         
@@ -721,7 +721,7 @@ associated dom node that contains it</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <h2 id="setup">setup</h2>
+              <h2 id="run">run</h2>
 
             </div>
             
@@ -734,13 +734,13 @@ associated dom node that contains it</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>This methods gets called in the run method in the client. 
+              <p>This methods gets called in the setup method in the client. 
 this after the dom is ready.. usually used for setting up 
 event handlers, subscribing to messages via Mediator, etc.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setup : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  run : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
             
         </li>
         

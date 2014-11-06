@@ -73,15 +73,15 @@ class View
 
   # refresh
   # -------
-  # Refresh this views content and optionally rerun it
-  refresh : (rerun = true)->
+  # Refresh this views content and optionally resetup it
+  refresh : (resetup = true)->
     @removing()
     @_removeBehaviors()
     html = @html()
     @$node().replaceWith(html)
     @_$node = null
-    if rerun
-      @run()
+    if resetup
+      @setup()
 
   # behavior
   # --------
@@ -93,7 +93,7 @@ class View
   # The event should be a valid jQuery event and the view should
   # have a method matching the handler name. 
   #
-  # When the view is run in the client, the named event handler 
+  # When the view is setup in the client, the named event handler 
   # will be bound to the event. When the event is triggered on 
   # the element containing this behavior attribute, the handler
   # will be run. 
@@ -106,19 +106,19 @@ class View
 
     "#{@_behaviorAttr()}=\"#{values.join(BEHAVIOR_DELIMITER)}\""
 
-  # run
-  # ---
+  # setup
+  # -----
   # This gets called by the client in order to initialize the 
   # behavior (i.e. event) handling in this view and its subviews
   #
-  # Prior to adding behaviors, it calls setup, which can be 
+  # Prior to adding behaviors, it calls run, which can be 
   # overridden in child classes to perform custom logic in the 
   # client beforehand i.e. for event setup, subscription etc. 
-  run : ()->
-    @setup()
+  setup : ()->
+    @run()
     @_addBehaviors()
     for id, subview of @_subviews
-      subview.run()
+      subview.setup()
 
   # page
   # ----
@@ -215,12 +215,12 @@ class View
   # --------------
   # These methods should implemented by child classes 
 
-  # setup
-  # -----
-  # This methods gets called in the run method in the client. 
+  # run
+  # ---
+  # This methods gets called in the setup method in the client. 
   # this after the dom is ready.. usually used for setting up 
   # event handlers, subscribing to messages via Mediator, etc.
-  setup : ()->
+  run : ()->
     
   # template
   # --------

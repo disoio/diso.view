@@ -394,14 +394,14 @@ either set above or in the child class. otherwise throw error</p>
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>refresh / rerender this view
-TODO: if removing subviews, shouldn’t rerun be necc.? </p>
+TODO: if removing subviews, shouldn’t resetup be necc.? </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(rerun = <span class="hljs-literal">true</span>)</span>-&gt;</span>
+            <div class="content"><div class='highlight'><pre>  refresh : <span class="hljs-function"><span class="hljs-params">(resetup = <span class="hljs-literal">true</span>)</span>-&gt;</span>
     <span class="hljs-property">@removeAllSubviews</span>()
     <span class="hljs-property">@_setupItemViews</span>()
-    <span class="hljs-keyword">super</span>(rerun)</pre></div></div>
+    <span class="hljs-keyword">super</span>(resetup)</pre></div></div>
             
         </li>
         

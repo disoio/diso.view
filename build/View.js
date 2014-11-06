@@ -51,18 +51,18 @@
       return this._addViewId(html);
     };
 
-    View.prototype.refresh = function(rerun) {
+    View.prototype.refresh = function(resetup) {
       var html;
-      if (rerun == null) {
-        rerun = true;
+      if (resetup == null) {
+        resetup = true;
       }
       this.removing();
       this._removeBehaviors();
       html = this.html();
       this.$node().replaceWith(html);
       this._$node = null;
-      if (rerun) {
-        return this.run();
+      if (resetup) {
+        return this.setup();
       }
     };
 
@@ -73,15 +73,15 @@
       return "" + (this._behaviorAttr()) + "=\"" + (values.join(BEHAVIOR_DELIMITER)) + "\"";
     };
 
-    View.prototype.run = function() {
+    View.prototype.setup = function() {
       var id, subview, _ref, _results;
-      this.setup();
+      this.run();
       this._addBehaviors();
       _ref = this._subviews;
       _results = [];
       for (id in _ref) {
         subview = _ref[id];
-        _results.push(subview.run());
+        _results.push(subview.setup());
       }
       return _results;
     };
@@ -175,7 +175,7 @@
       return _results;
     };
 
-    View.prototype.setup = function() {};
+    View.prototype.run = function() {};
 
     View.prototype.template = function() {
       return "<h1>\n  You need to add a <strong>template</strong> method to your view\n</h1>";

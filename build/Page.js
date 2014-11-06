@@ -141,7 +141,7 @@
       html = new_body.html();
       $body.replaceWith(html);
       this.setBody(new_body);
-      return new_body.run();
+      return new_body.setup();
     };
 
     Page.prototype.replaceLoadingWithBuild = function() {
