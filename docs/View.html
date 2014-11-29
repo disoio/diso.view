@@ -97,10 +97,12 @@ Type    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">VIEW_REGEX</span> = (<span class="hljs-params">()</span>-&gt;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">VIEW_REGEX</span> = <span class="hljs-params">(()-&gt;
   regex_str = <span class="hljs-string">"^(\\s*&lt;[\\w][\\w0-9]*)"</span>
   <span class="hljs-keyword">new</span> RegExp(regex_str, <span class="hljs-string">'m'</span>)
-)()</pre></div></div>
+)()</span>
+
+</span></pre></div></div>
             
         </li>
         
@@ -908,14 +910,15 @@ the named event</p>
         <span class="hljs-keyword">if</span> handler_name <span class="hljs-keyword">of</span> @
           event_name = <span class="hljs-property">@_namespaceEvent</span>(event_name)
           handler = @[handler_name]
-          $node.<span class="hljs-literal">on</span>(event_name, <span class="hljs-function"><span class="hljs-params">(event)</span>-&gt;</span>
+          $node.<span class="hljs-literal">on</span><span class="hljs-function"><span class="hljs-params">(event_name, (event)-&gt;
             handler(
               event : event
               node  : <span class="hljs-keyword">this</span>
               $node : $node
             )
-          )
-        <span class="hljs-keyword">else</span></pre></div></div>
+          )</span>
+        <span class="hljs-title">else</span>
+</span></pre></div></div>
             
         </li>
         
@@ -1091,7 +1094,7 @@ Object.defineProperty(View.prototype, <span class="hljs-string">'user'</span>, {
     <span class="hljs-property">@_user</span> = user
 })
       
-<span class="hljs-built_in">module</span>.exports = View</pre></div></div>
+<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = View</pre></div></div>
             
         </li>
         

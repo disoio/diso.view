@@ -211,6 +211,11 @@ class Page extends View
   build : ()->
     null
 
+  # error
+  # -----
+  error : (error)->
+    console.error(error)
+
   # template
   # --------
   # Child classes should override this method to provide 

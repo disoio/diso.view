@@ -172,6 +172,10 @@
       return null;
     };
 
+    Page.prototype.error = function(error) {
+      return console.error(error);
+    };
+
     Page.prototype.template = function() {
       if (this._body) {
         return this._body.html();
