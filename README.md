@@ -25,3 +25,12 @@ A run method that gets called in the client to attach event handlers to the view
 idMap that returns and object detailing the id hierarchy through the tree of subviews
 
 
+TODO
+----
+
+support ref attributes?
+
+Libs to checkout
+----------------
+- https://github.com/strongloop/strong-remoting
+
