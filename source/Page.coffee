@@ -153,7 +153,7 @@ class Page extends View
   # buildAndSetBody
   # ---------------
   buildAndSetBody : ()->
-    body = @build()
+    body = @build(@page_data)
     if body
       unless Type.instance(body, View)
         throw new Error("diso.view.Page: build should return View for body")
@@ -208,7 +208,7 @@ class Page extends View
   # -----
   # Child classes should override this to construct and add the
   # views for the page
-  build : ()->
+  build : (data)->
     null
 
   # error
@@ -216,15 +216,19 @@ class Page extends View
   error : (error)->
     console.error(error)
 
+  # html
+  # ----
+  # Called to render this view's template
+  html : ()->
+    body_html = @_body.html()
+    @template(body_html)
+
   # template
   # --------
   # Child classes should override this method to provide 
   # any wrapper html needed around this page's body view
-  template : ()->
-    if @_body
-      @_body.html()
-    else
-      ''
+  template : (body)->
+    body
 
   # headers
   # -------

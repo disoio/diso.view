@@ -536,7 +536,7 @@ object</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  buildAndSetBody : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    body = <span class="hljs-property">@build</span>()
+    body = <span class="hljs-property">@build</span>(<span class="hljs-property">@page_data</span>)
     <span class="hljs-keyword">if</span> body
       <span class="hljs-keyword">unless</span> Type.instance(body, View)
         <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Page: build should return View for body"</span>)
@@ -751,7 +751,7 @@ views for the page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
     <span class="hljs-literal">null</span></pre></div></div>
             
         </li>
@@ -791,7 +791,7 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <h2 id="template">template</h2>
+              <h2 id="html">html</h2>
 
             </div>
             
@@ -804,16 +804,13 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>Child classes should override this method to provide 
-any wrapper html needed around this page’s body view</p>
+              <p>Called to render this view’s template</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  template : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@_body</span>
-      <span class="hljs-property">@_body</span>.html()
-    <span class="hljs-keyword">else</span>
-      <span class="hljs-string">''</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  html : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    body_html = <span class="hljs-property">@_body</span>.html()
+    <span class="hljs-property">@template</span>(body_html)</pre></div></div>
             
         </li>
         
@@ -824,7 +821,7 @@ any wrapper html needed around this page’s body view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <h2 id="headers">headers</h2>
+              <h2 id="template">template</h2>
 
             </div>
             
@@ -837,13 +834,13 @@ any wrapper html needed around this page’s body view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p>Child classes can optionally override to specify or set
-any HTTP headers specific to this view</p>
+              <p>Child classes should override this method to provide 
+any wrapper html needed around this page’s body view</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  headers : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-property">@_headers</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  template : <span class="hljs-function"><span class="hljs-params">(body)</span>-&gt;</span>
+    body</pre></div></div>
             
         </li>
         
@@ -854,7 +851,7 @@ any HTTP headers specific to this view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <h2 id="head">head</h2>
+              <h2 id="headers">headers</h2>
 
             </div>
             
@@ -867,6 +864,36 @@ any HTTP headers specific to this view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
+              <p>Child classes can optionally override to specify or set
+any HTTP headers specific to this view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  headers : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@_headers</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <h2 id="head">head</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
               <p>Child classes may override this to provide a string
 of html that will be inserted into the page’s <head> section</p>
 
@@ -875,7 +902,7 @@ of html that will be inserted into the page’s <head> section</p>
             <div class="content"><div class='highlight'><pre>  head : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
     <span class="hljs-string">''</span>
 
-<span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = Page</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = Page</pre></div></div>
             
         </li>
         

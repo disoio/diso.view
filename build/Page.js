@@ -126,7 +126,7 @@
 
     Page.prototype.buildAndSetBody = function() {
       var body;
-      body = this.build();
+      body = this.build(this.page_data);
       if (body) {
         if (!Type.instance(body, View)) {
           throw new Error("diso.view.Page: build should return View for body");
@@ -168,7 +168,7 @@
       return callback(null, null);
     };
 
-    Page.prototype.build = function() {
+    Page.prototype.build = function(data) {
       return null;
     };
 
@@ -176,12 +176,14 @@
       return console.error(error);
     };
 
-    Page.prototype.template = function() {
-      if (this._body) {
-        return this._body.html();
-      } else {
-        return '';
-      }
+    Page.prototype.html = function() {
+      var body_html;
+      body_html = this._body.html();
+      return this.template(body_html);
+    };
+
+    Page.prototype.template = function(body) {
+      return body;
     };
 
     Page.prototype.headers = function() {
