@@ -26,6 +26,9 @@
 
     function CollectionView(args) {
       var collection, collection_in_args, collection_name;
+      if (args == null) {
+        args = {};
+      }
       if (args.data == null) {
         args.data = {};
       }
@@ -39,6 +42,9 @@
           throwError("Can't pass collection arg and named collection in data");
         }
         collection = args.data[this.collection_name];
+      }
+      if (this.collection && !collection) {
+        collection = this.collection;
       }
       if (!collection) {
         throwError("Missing collection in " + this.constructor.name);

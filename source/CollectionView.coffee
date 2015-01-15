@@ -54,6 +54,7 @@ class CollectionView extends View
   #    collection and should return a string of html
 
   constructor : (args)->
+    args ?= {}
     args.data ?= {}
 
     collection = null
@@ -76,6 +77,8 @@ class CollectionView extends View
     # will be the actual collection rather than property lookup 
     # either way @collection should at this point return something 
     # either set above or in the child class. otherwise throw error
+    if @collection and !collection
+      collection = @collection
 
     unless collection
       throwError("Missing collection in #{@constructor.name}")
