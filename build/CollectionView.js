@@ -56,6 +56,12 @@
       collection_name = this._collectionName();
       this[collection_name] = collection;
       this._setupItemViews();
+      if (this.sort) {
+        if (!Type(this.sort, Function)) {
+          throwError("sort attribute is not a function");
+        }
+        this[collection_name] = this[collection_name].sort(this.sort);
+      }
     }
 
     CollectionView.prototype.addModel = function(model) {
@@ -97,6 +103,8 @@
     CollectionView.prototype.itemData = function() {
       return {};
     };
+
+    CollectionView.prototype.sort = null;
 
     CollectionView.prototype.template = function() {
       var html, id, item, subview, _i, _len, _ref, _ref1;

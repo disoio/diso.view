@@ -1,7 +1,7 @@
 diso.view
 =========
 
-0.0.29
+0.0.30
 
 Description
 -----------
@@ -28,9 +28,12 @@ idMap that returns and object detailing the id hierarchy through the tree of sub
 TODO
 ----
 
+
+
 support ref attributes?
 
 Libs to checkout
 ----------------
+- https://github.com/muut/riotjs/tree/master/lib
 - https://github.com/strongloop/strong-remoting
 

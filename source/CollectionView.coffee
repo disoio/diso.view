@@ -91,6 +91,11 @@ class CollectionView extends View
     @[collection_name] = collection
     @_setupItemViews()
 
+    if @sort
+      unless Type(@sort, Function)
+        throwError("sort attribute is not a function")
+      @[collection_name] = @[collection_name].sort(@sort)
+
   # addModel
   # --------
   # Add a model to this collection
@@ -144,6 +149,13 @@ class CollectionView extends View
   # have all its properties adding to the item data. 
   itemData : ()->
     {}
+
+  # sort 
+  # ----
+  # Override with sort function if present
+  # TODO: need to support re-sorting collection when elements 
+  #       are added to collection
+  sort : null
 
   # *INTERNAL METHODS*
   # ------------------

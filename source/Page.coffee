@@ -187,6 +187,17 @@ class Page extends View
     @route     = null
     @url       = null
 
+  # routeName
+  # ---------
+  routeName : ()->
+    @route.name
+
+  # routeIs
+  # -------
+  routeIs : (route_name)->
+    @routeName() is route_name
+
+
   # *TODODODODO*
   # ------------
   showModal : ()->

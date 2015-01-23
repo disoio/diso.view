@@ -648,7 +648,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2 id="-tododododo-"><em>TODODODODO</em></h2>
+              <h2 id="routename">routeName</h2>
 
             </div>
             
@@ -664,8 +664,8 @@ object</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>  showModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-  hideModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  routeName : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@route</span>.name</pre></div></div>
             
         </li>
         
@@ -676,7 +676,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
+              <h2 id="routeis">routeIs</h2>
 
             </div>
             
@@ -689,9 +689,11 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>These methods should/may be implemented by child classes </p>
-
+              
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  routeIs : <span class="hljs-function"><span class="hljs-params">(route_name)</span>-&gt;</span>
+    <span class="hljs-property">@routeName</span>() <span class="hljs-keyword">is</span> route_name</pre></div></div>
             
         </li>
         
@@ -702,7 +704,7 @@ object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <h2 id="load">load</h2>
+              <h2 id="-tododododo-"><em>TODODODODO</em></h2>
 
             </div>
             
@@ -714,6 +716,60 @@ object</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  showModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+  hideModal : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h2 id="-stub-methods-"><em>STUB METHODS</em></h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>These methods should/may be implemented by child classes </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="load">load</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Child classes should override this to load the data
 from models. After retrieving the data they should
@@ -727,71 +783,13 @@ call callback with (error, data)</p>
         </li>
         
         
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <h2 id="build">build</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>Child classes should override this to construct and add the
-views for the page</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
-    <span class="hljs-literal">null</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <h2 id="error">error</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  error : <span class="hljs-function"><span class="hljs-params">(error)</span>-&gt;</span>
-    <span class="hljs-built_in">console</span>.error(error)</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <h2 id="html">html</h2>
+              <h2 id="build">build</h2>
 
             </div>
             
@@ -804,13 +802,13 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>Called to render this view’s template</p>
+              <p>Child classes should override this to construct and add the
+views for the page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  html : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    body_html = <span class="hljs-property">@_body</span>.html()
-    <span class="hljs-property">@template</span>(body_html)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  build : <span class="hljs-function"><span class="hljs-params">(data)</span>-&gt;</span>
+    <span class="hljs-literal">null</span></pre></div></div>
             
         </li>
         
@@ -821,7 +819,7 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <h2 id="template">template</h2>
+              <h2 id="error">error</h2>
 
             </div>
             
@@ -834,13 +832,11 @@ views for the page</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p>Child classes should override this method to provide 
-any wrapper html needed around this page’s body view</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  template : <span class="hljs-function"><span class="hljs-params">(body)</span>-&gt;</span>
-    body</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  error : <span class="hljs-function"><span class="hljs-params">(error)</span>-&gt;</span>
+    <span class="hljs-built_in">console</span>.error(error)</pre></div></div>
             
         </li>
         
@@ -851,7 +847,7 @@ any wrapper html needed around this page’s body view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <h2 id="headers">headers</h2>
+              <h2 id="html">html</h2>
 
             </div>
             
@@ -864,13 +860,13 @@ any wrapper html needed around this page’s body view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <p>Child classes can optionally override to specify or set
-any HTTP headers specific to this view</p>
+              <p>Called to render this view’s template</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  headers : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
-    <span class="hljs-property">@_headers</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  html : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    body_html = <span class="hljs-property">@_body</span>.html()
+    <span class="hljs-property">@template</span>(body_html)</pre></div></div>
             
         </li>
         
@@ -881,7 +877,7 @@ any HTTP headers specific to this view</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <h2 id="head">head</h2>
+              <h2 id="template">template</h2>
 
             </div>
             
@@ -893,6 +889,66 @@ any HTTP headers specific to this view</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Child classes should override this method to provide 
+any wrapper html needed around this page’s body view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  template : <span class="hljs-function"><span class="hljs-params">(body)</span>-&gt;</span>
+    body</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <h2 id="headers">headers</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Child classes can optionally override to specify or set
+any HTTP headers specific to this view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  headers : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-property">@_headers</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <h2 id="head">head</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>Child classes may override this to provide a string
 of html that will be inserted into the page’s <head> section</p>

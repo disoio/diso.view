@@ -160,6 +160,14 @@
       return this.url = null;
     };
 
+    Page.prototype.routeName = function() {
+      return this.route.name;
+    };
+
+    Page.prototype.routeIs = function(route_name) {
+      return this.routeName() === route_name;
+    };
+
     Page.prototype.showModal = function() {};
 
     Page.prototype.hideModal = function() {};
