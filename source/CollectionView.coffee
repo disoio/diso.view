@@ -92,9 +92,7 @@ class CollectionView extends View
     @_setupItemViews()
 
     if @sort
-      unless Type(@sort, Function)
-        throwError("sort attribute is not a function")
-      @[collection_name] = @[collection_name].sort(@sort)
+      @resort()
 
   # addModel
   # --------
@@ -157,6 +155,14 @@ class CollectionView extends View
   #       are added to collection
   sort : null
 
+  # resort
+  # ------
+  # resort this view's collection
+  resort : ()->
+    unless Type(@sort, Function)
+      throwError("sort attribute is not a function")
+    @collection = @collection.sort(@sort)
+
   # *INTERNAL METHODS*
   # ------------------
 
@@ -187,6 +193,7 @@ class CollectionView extends View
       @item_is_view = true
 
       ItemView = @item
+       
       for item in @collection
         item_data = {
           user : @user

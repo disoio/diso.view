@@ -331,9 +331,7 @@ either set above or in the child class. otherwise throw error</p>
     <span class="hljs-property">@_setupItemViews</span>()
 
     <span class="hljs-keyword">if</span> <span class="hljs-property">@sort</span>
-      <span class="hljs-keyword">unless</span> Type(<span class="hljs-property">@sort</span>, Function)
-        throwError(<span class="hljs-string">"sort attribute is not a function"</span>)
-      @[collection_name] = @[collection_name].sort(<span class="hljs-property">@sort</span>)</pre></div></div>
+      <span class="hljs-property">@resort</span>()</pre></div></div>
             
         </li>
         
@@ -542,7 +540,7 @@ TODO: need to support re-sorting collection when elements
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <h2 id="-internal-methods-"><em>INTERNAL METHODS</em></h2>
+              <h2 id="resort">resort</h2>
 
             </div>
             
@@ -555,8 +553,14 @@ TODO: need to support re-sorting collection when elements
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              
+              <p>resort this view’s collection</p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  resort : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
+    <span class="hljs-keyword">unless</span> Type(<span class="hljs-property">@sort</span>, Function)
+      throwError(<span class="hljs-string">"sort attribute is not a function"</span>)
+    <span class="hljs-property">@collection</span> = <span class="hljs-property">@collection</span>.sort(<span class="hljs-property">@sort</span>)</pre></div></div>
             
         </li>
         
@@ -567,7 +571,7 @@ TODO: need to support re-sorting collection when elements
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h2 id="template">template</h2>
+              <h2 id="-internal-methods-"><em>INTERNAL METHODS</em></h2>
 
             </div>
             
@@ -579,6 +583,31 @@ TODO: need to support re-sorting collection when elements
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2 id="template">template</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>The template for this collection view. This should in general
 not be overriden in child classes, unless you know what you’re 
@@ -602,11 +631,11 @@ to achieve desired results. </p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h2 id="_setupitemviews">_setupItemViews</h2>
 
@@ -615,11 +644,11 @@ to achieve desired results. </p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>If the item attribute is a View constructor, add a subview for 
 each view in this view’s collection</p>
@@ -631,6 +660,7 @@ each view in this view’s collection</p>
       <span class="hljs-property">@item_is_view</span> = <span class="hljs-literal">true</span>
 
       ItemView = <span class="hljs-property">@item</span>
+       
       <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-property">@collection</span>
         item_data = {
           user : <span class="hljs-property">@user</span>
@@ -649,11 +679,11 @@ each view in this view’s collection</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>We need to access the collection indirectly so as to support
 the different ways of specifying it in constructor / child class</p>

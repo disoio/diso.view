@@ -1,6 +1,6 @@
 {
   "name": "diso.view",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Views...",
   "license": "MIT",
   "main": "build/index.js",
@@ -23,7 +23,7 @@
     "node": ">=0.10.5"
   },
   "dependencies": {
-    "type-of-is": "~3.3.0",
+    "type-of-is": "~3.3.1",
     "jquery": "~2.1.0",
     "shortid": "~2.0.0"
   },
