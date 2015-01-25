@@ -538,8 +538,8 @@ object</p>
             <div class="content"><div class='highlight'><pre>  buildAndSetBody : <span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>
     body = <span class="hljs-property">@build</span>(<span class="hljs-property">@page_data</span>)
     <span class="hljs-keyword">if</span> body
-      <span class="hljs-keyword">unless</span> Type.instance(body, View)
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Page: build should return View for body"</span>)
+      <span class="hljs-keyword">unless</span> Type(body.html, Function)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"diso.view.Page: build should return view with html method"</span>)
       <span class="hljs-property">@setBody</span>(body)</pre></div></div>
             
         </li>

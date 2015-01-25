@@ -155,8 +155,8 @@ class Page extends View
   buildAndSetBody : ()->
     body = @build(@page_data)
     if body
-      unless Type.instance(body, View)
-        throw new Error("diso.view.Page: build should return View for body")
+      unless Type(body.html, Function)
+        throw new Error("diso.view.Page: build should return view with html method")
       @setBody(body)
   
   # swapBody 

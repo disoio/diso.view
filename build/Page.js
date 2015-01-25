@@ -128,8 +128,8 @@
       var body;
       body = this.build(this.page_data);
       if (body) {
-        if (!Type.instance(body, View)) {
-          throw new Error("diso.view.Page: build should return View for body");
+        if (!Type(body.html, Function)) {
+          throw new Error("diso.view.Page: build should return view with html method");
         }
         return this.setBody(body);
       }
