@@ -60,6 +60,7 @@
       this.route = args.route;
       this.url = "" + args.origin + (this.route.path());
       this._user = args.user;
+      this.setId(this.constructor.name);
     }
 
     Page.prototype.setData = function(data) {
@@ -72,10 +73,6 @@
 
     Page.prototype.needsUser = function() {
       return this.requires_user && (!this.hasUser());
-    };
-
-    Page.prototype.key = function() {
-      return "" + this.constructor.name + ":" + this.id;
     };
 
     Page.prototype.setMeta = function(metadata) {
@@ -117,11 +114,11 @@
     };
 
     Page.prototype.setBody = function(new_body) {
-      if (this._body) {
-        this.removeSubview(this._body);
+      if (this.body) {
+        this.removeSubview(this.body);
       }
-      this._body = new_body;
-      return this.addSubview(this._body);
+      this.body = new_body;
+      return this.addSubview(this.body);
     };
 
     Page.prototype.buildAndSetBody = function() {
@@ -137,7 +134,7 @@
 
     Page.prototype.swapBody = function(new_body) {
       var $body, html;
-      $body = this._body.$node();
+      $body = this.body.$node();
       html = new_body.html();
       $body.replaceWith(html);
       this.setBody(new_body);
@@ -146,16 +143,16 @@
 
     Page.prototype.replaceLoadingWithBuild = function() {
       var $body, html;
-      $body = this._body.$node();
+      $body = this.body.$node();
       this.buildAndSetBody();
-      html = this._body.html();
+      html = this.body.html();
       return $body.replaceWith(html);
     };
 
     Page.prototype.remove = function() {
-      this._body.removeAllSubviews();
-      this.removeSubview(this._body);
-      this._body = null;
+      this.body.removeAllSubviews();
+      this.removeSubview(this.body);
+      this.body = null;
       this.route = null;
       return this.url = null;
     };
@@ -186,7 +183,7 @@
 
     Page.prototype.html = function() {
       var body_html;
-      body_html = this._body.html();
+      body_html = this.body.html();
       return this.template(body_html);
     };
 

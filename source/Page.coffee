@@ -1,9 +1,9 @@
 # NPM dependencies
 # ------------------
 # [jquery](https://github.com/jquery/jquery)  
-# [type-of-is](https://github.com/stephenhandley/type-of-is)  
-$    = require('jquery')
-Type = require('type-of-is')
+# [type-of-is](https://github.com/stephenhandley/type-of-is)
+$       = require('jquery')
+Type    = require('type-of-is')
 
 # Local dependencies
 # ------------------
@@ -73,10 +73,12 @@ class Page extends View
   # 
   constructor : (args)->
     super()
+
     @models = args.models
     @route  = args.route
     @url    = "#{args.origin}#{@route.path()}"
     @_user  = args.user
+    @setId(@constructor.name)
 
   # setData
   # -------
@@ -96,12 +98,6 @@ class Page extends View
   # not render until the user is there
   needsUser : ()->
     (@requires_user and (not @hasUser()))
-
-  # key
-  # ---
-  # Key used for identifying a page
-  key : ()->
-    "#{@constructor.name}:#{@id}"
 
   # setMeta 
   # -------
@@ -145,10 +141,10 @@ class Page extends View
   # -------
   # set the body of this page
   setBody : (new_body)->
-    if @_body
-      @removeSubview(@_body)
-    @_body = new_body
-    @addSubview(@_body)
+    if @body
+      @removeSubview(@body)
+    @body = new_body
+    @addSubview(@body)
 
   # buildAndSetBody
   # ---------------
@@ -158,12 +154,12 @@ class Page extends View
       unless Type(body.html, Function)
         throw new Error("diso.view.Page: build should return view with html method")
       @setBody(body)
-  
+
   # swapBody 
   # --------
   # Change the body of this page to a different view
   swapBody : (new_body)->
-    $body = @_body.$node()
+    $body = @body.$node()
     html  = new_body.html()
     $body.replaceWith(html)
     @setBody(new_body)
@@ -172,20 +168,20 @@ class Page extends View
   # replaceLoadingBody
   # ------------------
   replaceLoadingWithBuild : ()->
-    $body = @_body.$node()
+    $body = @body.$node()
     @buildAndSetBody()
-    html = @_body.html()
+    html = @body.html()
     $body.replaceWith(html)
 
   # remove
   # ------
   # Remove the page and all its views
   remove : ()->
-    @_body.removeAllSubviews()
-    @removeSubview(@_body)
-    @_body     = null
-    @route     = null
-    @url       = null
+    @body.removeAllSubviews()
+    @removeSubview(@body)
+    @body  = null
+    @route = null
+    @url   = null
 
   # routeName
   # ---------
@@ -231,7 +227,7 @@ class Page extends View
   # ----
   # Called to render this view's template
   html : ()->
-    body_html = @_body.html()
+    body_html = @body.html()
     @template(body_html)
 
   # template
